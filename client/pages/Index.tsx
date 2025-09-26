@@ -306,10 +306,10 @@ export default function Index() {
       time: [
         { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น แถม 1 ชิ้น' },
         { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดราคา 15%' },
-        { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
+        { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี��เนย ลดราคา 20-25%' },
       ],
       vip: [
-        { product: 'ขนมป��งปอนด์', points: 4, vip_double: 8 },
+        { product: 'ขนมปังปอนด์', points: 4, vip_double: 8 },
         { product: 'ครัวซองต์', points: 2, vip_double: 4 },
         { product: 'บราวนี่', points: 2, vip_double: 4 },
       ],
