@@ -86,7 +86,7 @@ function runJsFallback(payload: any) {
     { key: "taiwan_cake", name: "เค้กไข่ไต้หวัน", price: 40, recipe: { flour: 30, butter: 5, sugar: 25, eggs: 2 }, base: 80 },
     { key: "brownie", name: "บราวนี่", price: 55, recipe: { flour: 25, butter: 20, sugar: 30, eggs: 1 }, base: 90 },
     { key: "pound_cake", name: "ขนมปังปอนด์", price: 80, recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 }, base: 60 },
-    { key: "macaron", name: "มาการอน", price: 25, recipe: { flour: 15, butter: 8, sugar: 20, eggs: 2 }, base: 45 },
+    { key: "macaron", name: "มากา���อน", price: 25, recipe: { flour: 15, butter: 8, sugar: 20, eggs: 2 }, base: 45 },
     { key: "choco_cake", name: "เค้กช็อคโกแลต", price: 65, recipe: { flour: 35, butter: 25, sugar: 35, eggs: 2 }, base: 70 },
     { key: "fruit_tart", name: "ทาร์ต��ลไม้", price: 45, recipe: { flour: 40, butter: 20, sugar: 15, eggs: 1 }, base: 55 },
   ];
@@ -134,7 +134,19 @@ function runJsFallback(payload: any) {
     stock.eggs -= allocate * p.recipe.eggs;
     capacity -= allocate;
 
-    plan.push({ product: p.name, key: p.key, quantity: allocate, profitPerUnit: (p.price - (p.recipe.flour*UNIT_COST.flour + p.recipe.butter*UNIT_COST.butter + p.recipe.sugar*UNIT_COST.sugar + p.recipe.eggs*UNIT_COST.eggs)) });
+    const expected_leftover = Math.max(0, allocate - (forecast[p.name] || 0));
+    const cost = p.recipe.flour*UNIT_COST.flour + p.recipe.butter*UNIT_COST.butter + p.recipe.sugar*UNIT_COST.sugar + p.recipe.eggs*UNIT_COST.eggs;
+    const gp_margin = +(((p.price - cost) / (p.price||1)).toFixed(2));
+    let promo = null;
+    if ((forecast[p.name]||0) > 0 && expected_leftover / Math.max(1, forecast[p.name]||0) > 0.3) {
+      promo = "โปรโมชั่นแนะนำ: ลดราคา 20%";
+    } else if (special) {
+      promo = "โปรดจัดชุดขายคู่กับกาแฟ";
+    } else if (expected_leftover>0 && expected_leftover>10) {
+      promo = "เร่งขาย เพราะวัตถุดิบอาจใกล้หมด";
+    }
+
+    plan.push({ product: p.name, key: p.key, quantity: allocate, profitPerUnit: (p.price - cost), expected_leftover, selling_price: p.price, product_cost: +cost.toFixed(2), gp_margin, promotion_suggestion: promo });
   }
 
   return { forecast, plan, remainingStock: stock };
