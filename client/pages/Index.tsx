@@ -141,7 +141,14 @@ export default function Index() {
         for (const item of remotePlan) {
           // try match by key or name
           const keyMatch = rows.find((r) => r.key === item.key || r.name === item.product || r.key === item.product);
-          if (keyMatch) keyMatch.qty = item.quantity || item.qty || keyMatch.qty;
+          if (keyMatch) {
+            keyMatch.qty = item.quantity || item.qty || keyMatch.qty;
+            if (item.promotion_suggestion) keyMatch.promotion = item.promotion_suggestion;
+            if (item.expected_leftover !== undefined) keyMatch.expected_leftover = item.expected_leftover;
+            if (item.selling_price !== undefined) keyMatch.selling_price = item.selling_price;
+            if (item.product_cost !== undefined) keyMatch.product_cost = item.product_cost;
+            if (item.gp_margin !== undefined) keyMatch.gp_margin = item.gp_margin;
+          }
         }
         setPlan(rows);
         setLastPlanId(data.id || null);
@@ -342,7 +349,7 @@ export default function Index() {
               </Button>
 
               <Button className="w-full md:w-auto" onClick={() => {
-                if (!lastPlanId) return sonner.error('ยัง���ม่มีแผนบันทึก กรุณากด คำนวณ ก่อน');
+                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด คำนวณ ก่อน');
                 const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
                 navigator.clipboard?.writeText(url);
                 sonner.success('คัดลอกลิงก์แผนไปยัง Clipboard');
@@ -370,7 +377,7 @@ export default function Index() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[40%]">เมนู</TableHead>
-                  <TableHead className="text-right">จำนวนแ���ะนำ</TableHead>
+                  <TableHead className="text-right">จำนวนแนะนำ</TableHead>
                   <TableHead className="text-right">กำไร/หน่วย</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
                 </TableRow>
