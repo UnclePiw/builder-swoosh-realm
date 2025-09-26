@@ -253,6 +253,34 @@ export default function Index() {
     setPlan(rows);
   }
 
+  // Load mocked outputs mimicking the Colab notebook
+  function loadColabMock() {
+    const mock = [
+      { key: 'croissant', product: 'ครัวซองต์', quantity: 40, forecast: 34, profitPerUnit: 34.7, expected_leftover: 6, promotion_suggestion: null },
+      { key: 'butter_cookie', product: 'คุกกี้เนย', quantity: 102, forecast: 85, profitPerUnit: 2.09, expected_leftover: 17, promotion_suggestion: 'โปรโมชั่นแนะนำ: ลดราคา 20%' },
+      { key: 'taiwan_cake', product: 'เค้กไข่ไต้หวัน', quantity: 39, forecast: 33, profitPerUnit: 9.84, expected_leftover: 6, promotion_suggestion: null },
+      { key: 'brownie', product: 'บราวนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'โปรดจัดชุดขายคู่กับกาแฟ' },
+      { key: 'pound_cake', product: 'ขนมปังปอนด์', quantity: 38, forecast: 32, profitPerUnit: 49.58, expected_leftover: 6, promotion_suggestion: 'โปรโมชั่น VIP: รับ 4 พอยต์' },
+      { key: 'choco_cake', product: 'เค้กช็อคโกแลต', quantity: 39, forecast: 33, profitPerUnit: 10.58, expected_leftover: 6, promotion_suggestion: null },
+      { key: 'fruit_tart', product: 'ทาร์ตผลไม้', quantity: 38, forecast: 32, profitPerUnit: 5.03, expected_leftover: 6, promotion_suggestion: null },
+    ];
+
+    const rows: PlanItem[] = productDerived.map((p) => ({ key: p.key, name: p.name, qty: 0, price: p.price, profitPerUnit: p.profitPerUnit, recipe: p.recipe }));
+    for (const item of mock) {
+      const match = rows.find(r => r.key === item.key || r.name === item.product || r.name === item.product);
+      if (match) {
+        match.qty = item.quantity;
+        match.promotion = item.promotion_suggestion;
+        match.expected_leftover = item.expected_leftover;
+        match.profitPerUnit = item.profitPerUnit;
+        match.selling_price = item.selling_price;
+      }
+    }
+    setPlan(rows);
+    setLastPlanId('colab-mock-1');
+    sonner.success('โหลดตัวอย่างจาก Colab เรียบร้อย');
+  }
+
   function handleConfirm() {
     const dateStr = new Date().toLocaleDateString("th-TH", { year: "numeric", month: "long", day: "numeric" });
     sonner.success(`บันทึกแผนผลิตสำเร็จ • ${branch} • ${dateStr}`);
@@ -388,7 +416,7 @@ export default function Index() {
               </Button>
 
               <Button className="w-full md:w-auto" onClick={() => {
-                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน');
+                if (!lastPlanId) return sonner.error('ยัง��ม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน');
                 const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
                 navigator.clipboard?.writeText(url);
                 sonner.success('คัดลอกลิงก์แผนไปยัง Clipboard');
@@ -416,7 +444,7 @@ export default function Index() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[30%]">เมนู</TableHead>
-                  <TableHead className="text-right">จำนวนแนะนำ</TableHead>
+                  <TableHead className="text-right">จำนว��แนะนำ</TableHead>
                   <TableHead className="text-right">กำไร/หน่วย</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
                   <TableHead className="text-right">คำแนะนำโปรโมชัน</TableHead>
