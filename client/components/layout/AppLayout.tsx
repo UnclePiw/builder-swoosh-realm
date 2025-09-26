@@ -1,5 +1,11 @@
 import { ReactNode, createContext, useContext, useMemo, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { CalendarDays, Store } from "lucide-react";
 
@@ -36,10 +42,19 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
             <div className="flex items-center gap-3">
-              <div className={cn("size-8 rounded-md border", "bg-gradient-to-br from-primary to-primary/70")}></div>
+              <div
+                className={cn(
+                  "size-8 rounded-md border",
+                  "bg-gradient-to-br from-primary to-primary/70",
+                )}
+              ></div>
               <div className="flex flex-col leading-tight">
-                <span className="text-sm text-muted-foreground">Bakery Section</span>
-                <h1 className="text-lg font-bold tracking-tight">เบเกอรี่วันนี้</h1>
+                <span className="text-sm text-muted-foreground">
+                  Bakery Section
+                </span>
+                <h1 className="text-lg font-bold tracking-tight">
+                  เบเกอรี่วันนี้
+                </h1>
               </div>
             </div>
 

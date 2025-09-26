@@ -5,11 +5,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Pie, PieChart, Cell } from "recharts";
-import { CheckCircle2, Pencil, RotateCcw, Calculator, Wheat, Egg, Candy, PackageOpen, ChefHat, CircleDollarSign } from "lucide-react";
+import {
+  CheckCircle2,
+  Pencil,
+  RotateCcw,
+  Calculator,
+  Wheat,
+  Egg,
+  Candy,
+  PackageOpen,
+  ChefHat,
+  CircleDollarSign,
+} from "lucide-react";
 import { toast as sonner } from "sonner";
 
 // Thai labels
@@ -41,20 +68,62 @@ const PRODUCTS: {
   price: number;
   recipe: { flour: number; butter: number; sugar: number; eggs: number };
 }[] = [
-  { key: "croissant", name: "ครัวซองต์", price: 50, recipe: { flour: 50, butter: 30, sugar: 10, eggs: 1 } },
-  { key: "butter_cookie", name: "คุกกี้เนย", price: 15, recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 } },
-  { key: "taiwan_cake", name: "เค้กไข่ไต้หวัน", price: 40, recipe: { flour: 30, butter: 5, sugar: 25, eggs: 2 } },
-  { key: "brownie", name: "บราวนี่", price: 55, recipe: { flour: 25, butter: 20, sugar: 30, eggs: 1 } },
-  { key: "pound_cake", name: "ขนมปังปอนด์", price: 80, recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 } },
-  { key: "macaron", name: "มาการอน", price: 25, recipe: { flour: 15, butter: 8, sugar: 20, eggs: 2 } },
-  { key: "choco_cake", name: "เค้กช็อคโกแลต", price: 65, recipe: { flour: 35, butter: 25, sugar: 35, eggs: 2 } },
-  { key: "fruit_tart", name: "ทาร์ตผลไม้", price: 45, recipe: { flour: 40, butter: 20, sugar: 15, eggs: 1 } },
+  {
+    key: "croissant",
+    name: "ครัวซองต์",
+    price: 50,
+    recipe: { flour: 50, butter: 30, sugar: 10, eggs: 1 },
+  },
+  {
+    key: "butter_cookie",
+    name: "คุกกี้เนย",
+    price: 15,
+    recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 },
+  },
+  {
+    key: "taiwan_cake",
+    name: "เค้กไข่ไต้หวัน",
+    price: 40,
+    recipe: { flour: 30, butter: 5, sugar: 25, eggs: 2 },
+  },
+  {
+    key: "brownie",
+    name: "บราวนี่",
+    price: 55,
+    recipe: { flour: 25, butter: 20, sugar: 30, eggs: 1 },
+  },
+  {
+    key: "pound_cake",
+    name: "ขนมปังปอนด์",
+    price: 80,
+    recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 },
+  },
+  {
+    key: "macaron",
+    name: "มาการอน",
+    price: 25,
+    recipe: { flour: 15, butter: 8, sugar: 20, eggs: 2 },
+  },
+  {
+    key: "choco_cake",
+    name: "เค้กช็อคโกแลต",
+    price: 65,
+    recipe: { flour: 35, butter: 25, sugar: 35, eggs: 2 },
+  },
+  {
+    key: "fruit_tart",
+    name: "ทาร์ตผลไม้",
+    price: 45,
+    recipe: { flour: 40, butter: 20, sugar: 15, eggs: 1 },
+  },
 ];
 
 const currency = (n: number) =>
-  new Intl.NumberFormat("th-TH", { style: "currency", currency: "THB", maximumFractionDigits: 0 }).format(
-    Math.round(n),
-  );
+  new Intl.NumberFormat("th-TH", {
+    style: "currency",
+    currency: "THB",
+    maximumFractionDigits: 0,
+  }).format(Math.round(n));
 
 export default function Index() {
   const { branch } = useAppContext();
@@ -66,7 +135,7 @@ export default function Index() {
     sugar: 40000,
     capacity: 2000,
     profitTarget: "",
-    weather: 'แดด',
+    weather: "แดด",
     special_day: false,
   });
 
@@ -101,7 +170,14 @@ export default function Index() {
   };
 
   const [plan, setPlan] = useState<PlanItem[]>(() =>
-    productDerived.map((p) => ({ key: p.key, name: p.name, qty: 0, price: p.price, profitPerUnit: p.profitPerUnit, recipe: p.recipe })),
+    productDerived.map((p) => ({
+      key: p.key,
+      name: p.name,
+      qty: 0,
+      price: p.price,
+      profitPerUnit: p.profitPerUnit,
+      recipe: p.recipe,
+    })),
   );
 
   useEffect(() => {
@@ -121,31 +197,48 @@ export default function Index() {
     return totals;
   }, [plan]);
 
-  const remaining = useMemo(() => ({
-    flour: Math.max(0, inputs.flour - usage.flour),
-    eggs: Math.max(0, inputs.eggs - usage.eggs),
-    butter: Math.max(0, inputs.butter - usage.butter),
-    sugar: Math.max(0, inputs.sugar - usage.sugar),
-  }), [inputs, usage]);
+  const remaining = useMemo(
+    () => ({
+      flour: Math.max(0, inputs.flour - usage.flour),
+      eggs: Math.max(0, inputs.eggs - usage.eggs),
+      butter: Math.max(0, inputs.butter - usage.butter),
+      sugar: Math.max(0, inputs.sugar - usage.sugar),
+    }),
+    [inputs, usage],
+  );
 
   const totalQty = useMemo(() => plan.reduce((a, b) => a + b.qty, 0), [plan]);
-  const totalProfit = useMemo(() => plan.reduce((a, b) => a + b.qty * b.profitPerUnit, 0), [plan]);
+  const totalProfit = useMemo(
+    () => plan.reduce((a, b) => a + b.qty * b.profitPerUnit, 0),
+    [plan],
+  );
 
   async function recalcPlan() {
     // Call backend API to compute plan (Python model if available)
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      sonner.error('ไม่สามารถเชื่อมต่ออินเทอร์เน็ต — ใช้โลคัลแทน');
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      sonner.error("ไม่สามารถเชื่อมต่ออินเทอร์เน็ต — ใช้โลคัลแทน");
       recalcLocal();
       return;
     }
 
-    const payload = { inputs, branch, date: new Date().toISOString(), weather: inputs.weather, special_day: inputs.special_day };
+    const payload = {
+      inputs,
+      branch,
+      date: new Date().toISOString(),
+      weather: inputs.weather,
+      special_day: inputs.special_day,
+    };
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
     try {
-      const resp = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: controller.signal });
+      const resp = await fetch("/api/plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
       clearTimeout(timeout);
 
       if (!resp.ok) {
@@ -177,19 +270,37 @@ export default function Index() {
       if (data && data.ok && data.result && data.result.plan) {
         const remotePlan = data.result.plan as any[];
         // Map remotePlan to local PlanItem[]
-        const rows: PlanItem[] = productDerived.map((p) => ({ key: p.key, name: p.name, qty: 0, price: p.price, profitPerUnit: p.profitPerUnit, recipe: p.recipe }));
+        const rows: PlanItem[] = productDerived.map((p) => ({
+          key: p.key,
+          name: p.name,
+          qty: 0,
+          price: p.price,
+          profitPerUnit: p.profitPerUnit,
+          recipe: p.recipe,
+        }));
         for (const item of remotePlan) {
           // try match by key or name
-          const keyMatch = rows.find((r) => r.key === item.key || r.name === item.product || r.key === item.product);
+          const keyMatch = rows.find(
+            (r) =>
+              r.key === item.key ||
+              r.name === item.product ||
+              r.key === item.product,
+          );
           if (keyMatch) {
             keyMatch.qty = item.quantity || item.qty || keyMatch.qty;
-            if (item.promotion_suggestion) keyMatch.promotion = item.promotion_suggestion;
-            if (item.expected_leftover !== undefined) keyMatch.expected_leftover = item.expected_leftover;
-            if (item.selling_price !== undefined) keyMatch.selling_price = item.selling_price;
-            if (item.product_cost !== undefined) keyMatch.product_cost = item.product_cost;
-            if (item.gp_margin !== undefined) keyMatch.gp_margin = item.gp_margin;
+            if (item.promotion_suggestion)
+              keyMatch.promotion = item.promotion_suggestion;
+            if (item.expected_leftover !== undefined)
+              keyMatch.expected_leftover = item.expected_leftover;
+            if (item.selling_price !== undefined)
+              keyMatch.selling_price = item.selling_price;
+            if (item.product_cost !== undefined)
+              keyMatch.product_cost = item.product_cost;
+            if (item.gp_margin !== undefined)
+              keyMatch.gp_margin = item.gp_margin;
             if (item.forecast !== undefined) keyMatch.forecast = item.forecast;
-            if (item.utilization_rate !== undefined) keyMatch.utilization_rate = item.utilization_rate;
+            if (item.utilization_rate !== undefined)
+              keyMatch.utilization_rate = item.utilization_rate;
           }
         }
         setPlan(rows);
@@ -213,7 +324,13 @@ export default function Index() {
   }
 
   function recalcLocal() {
-    const stock = { ...inputs } as { flour: number; eggs: number; butter: number; sugar: number; capacity: number };
+    const stock = { ...inputs } as {
+      flour: number;
+      eggs: number;
+      butter: number;
+      sugar: number;
+      capacity: number;
+    };
     const rows: PlanItem[] = productDerived.map((p) => ({
       key: p.key,
       name: p.name,
@@ -227,10 +344,10 @@ export default function Index() {
     const scored = productDerived
       .map((p) => {
         const weight =
-          (p.recipe.flour / Math.max(stock.flour, 1)) +
-          (p.recipe.butter / Math.max(stock.butter, 1)) +
-          (p.recipe.sugar / Math.max(stock.sugar, 1)) +
-          (p.recipe.eggs / Math.max(stock.eggs, 1));
+          p.recipe.flour / Math.max(stock.flour, 1) +
+          p.recipe.butter / Math.max(stock.butter, 1) +
+          p.recipe.sugar / Math.max(stock.sugar, 1) +
+          p.recipe.eggs / Math.max(stock.eggs, 1);
         const score = p.profitPerUnit / (weight || 1e-6);
         return { p, score };
       })
@@ -240,16 +357,33 @@ export default function Index() {
 
     for (const { p } of scored) {
       if (remainingCap <= 0) break;
-      const maxByFlour = p.recipe.flour ? Math.floor(stock.flour / p.recipe.flour) : Infinity;
-      const maxByButter = p.recipe.butter ? Math.floor(stock.butter / p.recipe.butter) : Infinity;
-      const maxBySugar = p.recipe.sugar ? Math.floor(stock.sugar / p.recipe.sugar) : Infinity;
-      const maxByEggs = p.recipe.eggs ? Math.floor(stock.eggs / p.recipe.eggs) : Infinity;
-      let maxUnits = Math.min(maxByFlour, maxByButter, maxBySugar, maxByEggs, remainingCap);
+      const maxByFlour = p.recipe.flour
+        ? Math.floor(stock.flour / p.recipe.flour)
+        : Infinity;
+      const maxByButter = p.recipe.butter
+        ? Math.floor(stock.butter / p.recipe.butter)
+        : Infinity;
+      const maxBySugar = p.recipe.sugar
+        ? Math.floor(stock.sugar / p.recipe.sugar)
+        : Infinity;
+      const maxByEggs = p.recipe.eggs
+        ? Math.floor(stock.eggs / p.recipe.eggs)
+        : Infinity;
+      let maxUnits = Math.min(
+        maxByFlour,
+        maxByButter,
+        maxBySugar,
+        maxByEggs,
+        remainingCap,
+      );
       if (!Number.isFinite(maxUnits) || maxUnits < 0) maxUnits = 0;
       if (maxUnits <= 0) continue;
 
       // Allocate proportional to profit and keep buffer to avoid single product domination
-      const allocate = Math.max(0, Math.floor(Math.min(maxUnits, Math.max(10, remainingCap * 0.35))));
+      const allocate = Math.max(
+        0,
+        Math.floor(Math.min(maxUnits, Math.max(10, remainingCap * 0.35))),
+      );
 
       stock.flour -= allocate * p.recipe.flour;
       stock.butter -= allocate * p.recipe.butter;
@@ -270,18 +404,114 @@ export default function Index() {
 
   function loadColabMock() {
     const mock = [
-      { key: 'croissant', product: 'ครัวซอ��ต์', quantity: 40, forecast: 34, profitPerUnit: 34.7, expected_leftover: 6, promotion_suggestion: null, selling_price:50, product_cost:15.3, gp_margin:69.0, utilization_rate:85.0 },
-      { key: 'butter_cookie', product: 'คุกกี้เนย', quantity: 102, forecast: 85, profitPerUnit: 2.09, expected_leftover: 17, promotion_suggestion: 'ลดราคา 20%', selling_price:15, product_cost:12.91, gp_margin:14.0, utilization_rate:83.3 },
-      { key: 'taiwan_cake', product: 'เค้กไข่ไต้หวัน', quantity: 39, forecast: 33, profitPerUnit: 9.84, expected_leftover: 6, promotion_suggestion: null, selling_price:40, product_cost:30.16, gp_margin:25.0, utilization_rate:84.6 },
-      { key: 'brownie', product: 'บราวนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'จัดชุดขายคู่กับกาแฟ', selling_price:55, product_cost:32.47, gp_margin:41.0, utilization_rate:84.1 },
-      { key: 'pound_cake', product: 'ขนมปังปอนด์', quantity: 38, forecast: 32, profitPerUnit: 49.58, expected_leftover: 6, promotion_suggestion: 'VIP: รับ 4 พอยต์', selling_price:80, product_cost:30.42, gp_margin:62.0, utilization_rate:84.2 },
-      { key: 'choco_cake', product: 'เค้กช็อคโกแลต', quantity: 39, forecast: 33, profitPerUnit: 10.58, expected_leftover: 6, promotion_suggestion: null, selling_price:65, product_cost:54.42, gp_margin:16.0, utilization_rate:84.6 },
-      { key: 'fruit_tart', product: 'ทาร์ตผลไม้', quantity: 38, forecast: 32, profitPerUnit: 5.03, expected_leftover: 6, promotion_suggestion: null, selling_price:45, product_cost:39.97, gp_margin:11.0, utilization_rate:84.2 },
+      {
+        key: "croissant",
+        product: "ครัวซอ��ต์",
+        quantity: 40,
+        forecast: 34,
+        profitPerUnit: 34.7,
+        expected_leftover: 6,
+        promotion_suggestion: null,
+        selling_price: 50,
+        product_cost: 15.3,
+        gp_margin: 69.0,
+        utilization_rate: 85.0,
+      },
+      {
+        key: "butter_cookie",
+        product: "คุกกี้เนย",
+        quantity: 102,
+        forecast: 85,
+        profitPerUnit: 2.09,
+        expected_leftover: 17,
+        promotion_suggestion: "ลดราคา 20%",
+        selling_price: 15,
+        product_cost: 12.91,
+        gp_margin: 14.0,
+        utilization_rate: 83.3,
+      },
+      {
+        key: "taiwan_cake",
+        product: "เค้กไข่ไต้หวัน",
+        quantity: 39,
+        forecast: 33,
+        profitPerUnit: 9.84,
+        expected_leftover: 6,
+        promotion_suggestion: null,
+        selling_price: 40,
+        product_cost: 30.16,
+        gp_margin: 25.0,
+        utilization_rate: 84.6,
+      },
+      {
+        key: "brownie",
+        product: "บราวนี่",
+        quantity: 44,
+        forecast: 37,
+        profitPerUnit: 22.53,
+        expected_leftover: 7,
+        promotion_suggestion: "จัดชุดขายคู่กับกาแฟ",
+        selling_price: 55,
+        product_cost: 32.47,
+        gp_margin: 41.0,
+        utilization_rate: 84.1,
+      },
+      {
+        key: "pound_cake",
+        product: "ขนมปังปอนด์",
+        quantity: 38,
+        forecast: 32,
+        profitPerUnit: 49.58,
+        expected_leftover: 6,
+        promotion_suggestion: "VIP: รับ 4 พอยต์",
+        selling_price: 80,
+        product_cost: 30.42,
+        gp_margin: 62.0,
+        utilization_rate: 84.2,
+      },
+      {
+        key: "choco_cake",
+        product: "เค้กช็อคโกแลต",
+        quantity: 39,
+        forecast: 33,
+        profitPerUnit: 10.58,
+        expected_leftover: 6,
+        promotion_suggestion: null,
+        selling_price: 65,
+        product_cost: 54.42,
+        gp_margin: 16.0,
+        utilization_rate: 84.6,
+      },
+      {
+        key: "fruit_tart",
+        product: "ทาร์ตผลไม้",
+        quantity: 38,
+        forecast: 32,
+        profitPerUnit: 5.03,
+        expected_leftover: 6,
+        promotion_suggestion: null,
+        selling_price: 45,
+        product_cost: 39.97,
+        gp_margin: 11.0,
+        utilization_rate: 84.2,
+      },
     ];
 
-    const rows: PlanItem[] = productDerived.map((p) => ({ key: p.key, name: p.name, qty: 0, price: p.price, profitPerUnit: p.profitPerUnit, recipe: p.recipe }));
+    const rows: PlanItem[] = productDerived.map((p) => ({
+      key: p.key,
+      name: p.name,
+      qty: 0,
+      price: p.price,
+      profitPerUnit: p.profitPerUnit,
+      recipe: p.recipe,
+    }));
     for (const item of mock) {
-      const match = rows.find(r => r.key === item.key || r.name === item.product || r.name === item.product);
+      const match = rows.find(
+        (r) =>
+          r.key === item.key ||
+          r.name === item.product ||
+          r.name === item.product,
+      );
       if (match) {
         match.qty = item.quantity;
         match.promotion = item.promotion_suggestion;
@@ -297,21 +527,42 @@ export default function Index() {
 
     // set up higher-level promotions and KPIs
     setPromotions({
-      flash: 'โปรโมชัน FLASH SALE (ลดล้างสต��อก)',
+      flash: "โปรโมชัน FLASH SALE (ลดล้างสต��อก)",
       bundles: [
-        { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
-        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
-        { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
+        {
+          title: "Bundle 1: ครัวซองต์ + บราวนี่",
+          normal: 105,
+          special: 93,
+          save: 12,
+        },
+        {
+          title: "Bundle 2: ครัวซองต์ + ขนมปังปอนด์",
+          normal: 130,
+          special: 115,
+          save: 15,
+        },
+        {
+          title: "Bundle 3: บราวนี่ + ขนมปังปอนด์",
+          normal: 135,
+          special: 119,
+          save: 16,
+        },
       ],
       time: [
-        { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น ���ถม 1 ชิ้น' },
-        { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดราคา 15%' },
-        { title: 'Evening Clear-out (18-20 น.)', desc: 'คุ��กี้เนย ลดราคา 20-25%' },
+        {
+          title: "Morning Rush (7-9 น.)",
+          desc: "ซื้อ ครัวซองต์ 3 ชิ้น ���ถม 1 ชิ้น",
+        },
+        { title: "Afternoon Delight (14-16 น.)", desc: "ครัวซองต์ ลดราคา 15%" },
+        {
+          title: "Evening Clear-out (18-20 น.)",
+          desc: "คุ��กี้เนย ลดราคา 20-25%",
+        },
       ],
       vip: [
-        { product: 'ขนมปังปอนด์', points: 4, vip_double: 8 },
-        { product: 'ครัวซองต์', points: 2, vip_double: 4 },
-        { product: 'บราวนี่', points: 2, vip_double: 4 },
+        { product: "ขนมปังปอนด์", points: 4, vip_double: 8 },
+        { product: "ครัวซองต์", points: 2, vip_double: 4 },
+        { product: "บราวนี่", points: 2, vip_double: 4 },
       ],
     });
 
@@ -327,21 +578,32 @@ export default function Index() {
     });
 
     setPlan(rows);
-    setLastPlanId('colab-mock-1');
-    sonner.success('โหลดตัวอย่างจาก Colab เรียบร้อย');
+    setLastPlanId("colab-mock-1");
+    sonner.success("โหลดตัวอย่างจาก Colab เรียบร้อย");
   }
 
   function handleConfirm() {
-    const dateStr = new Date().toLocaleDateString("th-TH", { year: "numeric", month: "long", day: "numeric" });
+    const dateStr = new Date().toLocaleDateString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
     sonner.success(`บันทึกแผนผลิตสำเร็จ • ${branch} • ${dateStr}`);
   }
 
-  function handleInputChange<K extends keyof typeof inputs>(key: K, value: number | string) {
+  function handleInputChange<K extends keyof typeof inputs>(
+    key: K,
+    value: number | string,
+  ) {
     setInputs((prev) => ({ ...prev, [key]: value as never }));
   }
 
   function setQty(key: string, qty: number) {
-    setPlan((prev) => prev.map((r) => (r.key === key ? { ...r, qty: Math.max(0, Math.floor(qty || 0)) } : r)));
+    setPlan((prev) =>
+      prev.map((r) =>
+        r.key === key ? { ...r, qty: Math.max(0, Math.floor(qty || 0)) } : r,
+      ),
+    );
   }
 
   const barData = plan.map((r) => ({ name: r.name, quantity: r.qty }));
@@ -363,20 +625,52 @@ export default function Index() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Wheat className="size-4 text-primary" /> {TH.flour}</Label>
-                <Input type="number" value={inputs.flour} onChange={(e) => handleInputChange("flour", Number(e.target.value))} />
+                <Label className="flex items-center gap-2">
+                  <Wheat className="size-4 text-primary" /> {TH.flour}
+                </Label>
+                <Input
+                  type="number"
+                  value={inputs.flour}
+                  onChange={(e) =>
+                    handleInputChange("flour", Number(e.target.value))
+                  }
+                />
               </div>
               <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Egg className="size-4 text-primary" /> {TH.eggs}</Label>
-                <Input type="number" value={inputs.eggs} onChange={(e) => handleInputChange("eggs", Number(e.target.value))} />
+                <Label className="flex items-center gap-2">
+                  <Egg className="size-4 text-primary" /> {TH.eggs}
+                </Label>
+                <Input
+                  type="number"
+                  value={inputs.eggs}
+                  onChange={(e) =>
+                    handleInputChange("eggs", Number(e.target.value))
+                  }
+                />
               </div>
               <div className="space-y-2">
-                <Label className="flex items-center gap-2"><PackageOpen className="size-4 text-primary" /> {TH.butter}</Label>
-                <Input type="number" value={inputs.butter} onChange={(e) => handleInputChange("butter", Number(e.target.value))} />
+                <Label className="flex items-center gap-2">
+                  <PackageOpen className="size-4 text-primary" /> {TH.butter}
+                </Label>
+                <Input
+                  type="number"
+                  value={inputs.butter}
+                  onChange={(e) =>
+                    handleInputChange("butter", Number(e.target.value))
+                  }
+                />
               </div>
               <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Candy className="size-4 text-primary" /> {TH.sugar}</Label>
-                <Input type="number" value={inputs.sugar} onChange={(e) => handleInputChange("sugar", Number(e.target.value))} />
+                <Label className="flex items-center gap-2">
+                  <Candy className="size-4 text-primary" /> {TH.sugar}
+                </Label>
+                <Input
+                  type="number"
+                  value={inputs.sugar}
+                  onChange={(e) =>
+                    handleInputChange("sugar", Number(e.target.value))
+                  }
+                />
               </div>
             </div>
 
@@ -384,13 +678,25 @@ export default function Index() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2 col-span-2">
-                <Label className="flex items-center gap-2"><ChefHat className="size-4 text-primary" /> {TH.capacity}</Label>
-                <Input type="number" value={inputs.capacity} onChange={(e) => handleInputChange("capacity", Number(e.target.value))} />
+                <Label className="flex items-center gap-2">
+                  <ChefHat className="size-4 text-primary" /> {TH.capacity}
+                </Label>
+                <Input
+                  type="number"
+                  value={inputs.capacity}
+                  onChange={(e) =>
+                    handleInputChange("capacity", Number(e.target.value))
+                  }
+                />
               </div>
 
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">สภาพอากาศ</Label>
-                <select className="w-full rounded-md border px-3 py-2" value={inputs.weather} onChange={(e) => handleInputChange("weather", e.target.value)}>
+                <select
+                  className="w-full rounded-md border px-3 py-2"
+                  value={inputs.weather}
+                  onChange={(e) => handleInputChange("weather", e.target.value)}
+                >
                   <option value="แดด">แดด</option>
                   <option value="ฝน">ฝน</option>
                   <option value="ครึ้ม">ครึ้ม</option>
@@ -399,16 +705,39 @@ export default function Index() {
               </div>
 
               <div className="space-y-2">
-                <Label className="flex items-center gap-2">วันพิเศษ / โปรโมชัน</Label>
+                <Label className="flex items-center gap-2">
+                  วันพิเศษ / โปรโมชัน
+                </Label>
                 <div className="flex items-center gap-3">
-                  <input id="special" type="checkbox" checked={Boolean(inputs.special_day)} onChange={(e) => handleInputChange("special_day", e.target.checked)} />
-                  <label htmlFor="special" className="text-sm text-muted-foreground">เช่น วันแม่, งานเทศกาล</label>
+                  <input
+                    id="special"
+                    type="checkbox"
+                    checked={Boolean(inputs.special_day)}
+                    onChange={(e) =>
+                      handleInputChange("special_day", e.target.checked)
+                    }
+                  />
+                  <label
+                    htmlFor="special"
+                    className="text-sm text-muted-foreground"
+                  >
+                    เช่น วันแม่, งานเทศกาล
+                  </label>
                 </div>
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label className="flex items-center gap-2"><CircleDollarSign className="size-4 text-primary" /> {TH.profitTarget}</Label>
-                <Input placeholder="เช่น 50,000" value={inputs.profitTarget} onChange={(e) => handleInputChange("profitTarget", e.target.value)} />
+                <Label className="flex items-center gap-2">
+                  <CircleDollarSign className="size-4 text-primary" />{" "}
+                  {TH.profitTarget}
+                </Label>
+                <Input
+                  placeholder="เช่น 50,000"
+                  value={inputs.profitTarget}
+                  onChange={(e) =>
+                    handleInputChange("profitTarget", e.target.value)
+                  }
+                />
               </div>
             </div>
 
@@ -429,27 +758,50 @@ export default function Index() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <SummaryStat label="จำนวนผลิตรวม" value={`${totalQty.toLocaleString()} ชิ้น`} />
-              <SummaryStat label="กำไรรวมคาดการณ์" value={currency(totalProfit)} highlight />
+              <SummaryStat
+                label="จำนวนผลิตรวม"
+                value={`${totalQty.toLocaleString()} ชิ้น`}
+              />
+              <SummaryStat
+                label="กำไรรวมคาดการณ์"
+                value={currency(totalProfit)}
+                highlight
+              />
             </div>
 
             <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
               <div>
                 <div className="font-medium mb-2">วัตถุดิบที่จะใช้</div>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>• {TH.flour}: {usage.flour.toLocaleString()}</li>
-                  <li>• {TH.eggs}: {usage.eggs.toLocaleString()}</li>
-                  <li>• {TH.butter}: {usage.butter.toLocaleString()}</li>
-                  <li>• {TH.sugar}: {usage.sugar.toLocaleString()}</li>
+                  <li>
+                    • {TH.flour}: {usage.flour.toLocaleString()}
+                  </li>
+                  <li>
+                    • {TH.eggs}: {usage.eggs.toLocaleString()}
+                  </li>
+                  <li>
+                    • {TH.butter}: {usage.butter.toLocaleString()}
+                  </li>
+                  <li>
+                    • {TH.sugar}: {usage.sugar.toLocaleString()}
+                  </li>
                 </ul>
               </div>
               <div>
                 <div className="font-medium mb-2">วัตถุดิบที่เหลือ</div>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>• {TH.flour}: {remaining.flour.toLocaleString()}</li>
-                  <li>• {TH.eggs}: {remaining.eggs.toLocaleString()}</li>
-                  <li>• {TH.butter}: {remaining.butter.toLocaleString()}</li>
-                  <li>• {TH.sugar}: {remaining.sugar.toLocaleString()}</li>
+                  <li>
+                    • {TH.flour}: {remaining.flour.toLocaleString()}
+                  </li>
+                  <li>
+                    • {TH.eggs}: {remaining.eggs.toLocaleString()}
+                  </li>
+                  <li>
+                    • {TH.butter}: {remaining.butter.toLocaleString()}
+                  </li>
+                  <li>
+                    • {TH.sugar}: {remaining.sugar.toLocaleString()}
+                  </li>
                 </ul>
               </div>
 
@@ -457,14 +809,38 @@ export default function Index() {
                 <div className="col-span-2 mt-3 rounded-md border bg-muted p-3 text-sm">
                   <div className="font-medium mb-2">สรุปการเงินและ KPI</div>
                   <div className="grid grid-cols-2 gap-2">
-                    <div>ปริมาณการผลิตรวม:</div><div className="font-semibold">{summary.total_production.toLocaleString()} ชิ้น</div>
-                    <div>ความต้องการรวม:</div><div className="font-semibold">{summary.total_demand.toLocaleString()} ชิ้น</div>
-                    <div>รายได้คาดการณ์:</div><div className="font-semibold">{currency(summary.revenue)}</div>
-                    <div>ต้นทุนรวม:</div><div className="font-semibold">{currency(summary.cost)}</div>
-                    <div>กำไรรวม:</div><div className="font-semibold">{currency(summary.profit)}</div>
-                    <div>อัตรากำไรเฉลี่ย:</div><div className="font-semibold">{summary.avg_margin_pct}%</div>
-                    <div>สินค้าคงเหลือคาด:</div><div className="font-semibold">{summary.expected_leftover} ชิ้น</div>
-                    <div>อัตราของเสีย:</div><div className="font-semibold">{summary.waste_rate_pct}%</div>
+                    <div>ปริมาณการผลิตรวม:</div>
+                    <div className="font-semibold">
+                      {summary.total_production.toLocaleString()} ชิ้น
+                    </div>
+                    <div>ความต้องการรวม:</div>
+                    <div className="font-semibold">
+                      {summary.total_demand.toLocaleString()} ชิ้น
+                    </div>
+                    <div>รายได้คาดการณ์:</div>
+                    <div className="font-semibold">
+                      {currency(summary.revenue)}
+                    </div>
+                    <div>ต้นทุนรวม:</div>
+                    <div className="font-semibold">
+                      {currency(summary.cost)}
+                    </div>
+                    <div>กำไรรวม:</div>
+                    <div className="font-semibold">
+                      {currency(summary.profit)}
+                    </div>
+                    <div>อัตรากำไรเฉลี่ย:</div>
+                    <div className="font-semibold">
+                      {summary.avg_margin_pct}%
+                    </div>
+                    <div>สินค้าคงเหลือคาด:</div>
+                    <div className="font-semibold">
+                      {summary.expected_leftover} ชิ้น
+                    </div>
+                    <div>อัตราของเสีย:</div>
+                    <div className="font-semibold">
+                      {summary.waste_rate_pct}%
+                    </div>
                   </div>
                 </div>
               )}
@@ -474,19 +850,29 @@ export default function Index() {
               <Button className="flex-1" onClick={handleConfirm}>
                 <CheckCircle2 className="mr-2 size-4" /> {TH.confirm}
               </Button>
-              <Button variant="outline" className="flex-1" onClick={() => setManual((v) => !v)}>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setManual((v) => !v)}
+              >
                 <Pencil className="mr-2 size-4" /> {TH.manual}
               </Button>
               <Button variant="secondary" onClick={recalcPlan}>
                 <RotateCcw className="mr-2 size-4" /> {TH.recalc}
               </Button>
 
-              <Button className="w-full md:w-auto" onClick={() => {
-                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน');
-                const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
-                navigator.clipboard?.writeText(url);
-                sonner.success('คัดลอกลิงก์แผนไปยัง Clipboard');
-              }}>
+              <Button
+                className="w-full md:w-auto"
+                onClick={() => {
+                  if (!lastPlanId)
+                    return sonner.error(
+                      "ยังไม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน",
+                    );
+                  const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
+                  navigator.clipboard?.writeText(url);
+                  sonner.success("คัดลอกลิงก์แผนไปยัง Clipboard");
+                }}
+              >
                 แชร์แผน
               </Button>
             </div>
@@ -524,25 +910,49 @@ export default function Index() {
                 {plan.map((row) => (
                   <TableRow key={row.key}>
                     <TableCell className="font-medium">{row.name}</TableCell>
-                    <TableCell className="text-right">{(row as any).forecast ? (row as any).forecast.toLocaleString() : '-'}</TableCell>
+                    <TableCell className="text-right">
+                      {(row as any).forecast
+                        ? (row as any).forecast.toLocaleString()
+                        : "-"}
+                    </TableCell>
                     <TableCell className="text-right">
                       {manual ? (
                         <Input
                           className="h-9 w-28 ml-auto text-right"
                           type="number"
                           value={row.qty}
-                          onChange={(e) => setQty(row.key, Number(e.target.value))}
+                          onChange={(e) =>
+                            setQty(row.key, Number(e.target.value))
+                          }
                         />
                       ) : (
                         <span>{row.qty.toLocaleString()}</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-right">{row.expected_leftover !== undefined ? row.expected_leftover : '-'}</TableCell>
-                    <TableCell className="text-right">{currency(row.profitPerUnit)}</TableCell>
-                    <TableCell className="text-right">{row.gp_margin !== undefined ? `${row.gp_margin}%` : '-'}</TableCell>
-                    <TableCell className="text-right">{(row as any).utilization_rate !== undefined ? `${(row as any).utilization_rate}%` : '-'}</TableCell>
-                    <TableCell className="text-right">{currency(row.qty * row.profitPerUnit)}</TableCell>
-                    <TableCell className="text-right"><div className="text-sm text-orange-600 font-medium">{row.promotion || '-'}</div></TableCell>
+                    <TableCell className="text-right">
+                      {row.expected_leftover !== undefined
+                        ? row.expected_leftover
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {currency(row.profitPerUnit)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {row.gp_margin !== undefined ? `${row.gp_margin}%` : "-"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {(row as any).utilization_rate !== undefined
+                        ? `${(row as any).utilization_rate}%`
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {currency(row.qty * row.profitPerUnit)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="text-sm text-orange-600 font-medium">
+                        {row.promotion || "-"}
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -554,18 +964,41 @@ export default function Index() {
           {/* Row 1 */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Production vs Demand Comparison</CardTitle>
+              <CardTitle className="text-lg">
+                Production vs Demand Comparison
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={plan.map(p=>({ name: p.name, production: p.qty, demand: (p as any).forecast || 0 }))}>
+                <BarChart
+                  data={plan.map((p) => ({
+                    name: p.name,
+                    production: p.qty,
+                    demand: (p as any).forecast || 0,
+                  }))}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11 }}
+                    interval={0}
+                    angle={-20}
+                    textAnchor="end"
+                    height={60}
+                  />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="production" name="Production Plan" fill="#059669" />
-                  <Bar dataKey="demand" name="Forecasted Demand" fill="#7C3AED" />
+                  <Bar
+                    dataKey="production"
+                    name="Production Plan"
+                    fill="#059669"
+                  />
+                  <Bar
+                    dataKey="demand"
+                    name="Forecasted Demand"
+                    fill="#7C3AED"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -573,13 +1006,27 @@ export default function Index() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Profit per Unit Analysis</CardTitle>
+              <CardTitle className="text-lg">
+                Profit per Unit Analysis
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={plan.map(p=>({ name: p.name, profit: +(p.profitPerUnit||0) }))}>
+                <BarChart
+                  data={plan.map((p) => ({
+                    name: p.name,
+                    profit: +(p.profitPerUnit || 0),
+                  }))}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11 }}
+                    interval={0}
+                    angle={-20}
+                    textAnchor="end"
+                    height={60}
+                  />
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="profit" fill="#10B981" />
@@ -590,13 +1037,27 @@ export default function Index() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Expected Total Profit by Product</CardTitle>
+              <CardTitle className="text-lg">
+                Expected Total Profit by Product
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={plan.map(p=>({ name: p.name, total: +(p.qty * (p.profitPerUnit||0)) }))}>
+                <BarChart
+                  data={plan.map((p) => ({
+                    name: p.name,
+                    total: +(p.qty * (p.profitPerUnit || 0)),
+                  }))}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11 }}
+                    interval={0}
+                    angle={-20}
+                    textAnchor="end"
+                    height={60}
+                  />
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="total" fill="#6B21A8" />
@@ -608,14 +1069,28 @@ export default function Index() {
           {/* Row 2 */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Production Utilization Rate</CardTitle>
+              <CardTitle className="text-lg">
+                Production Utilization Rate
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={plan.map(p=>({ name: p.name, util: ((p as any).utilization_rate||0) }))}>
+                <BarChart
+                  data={plan.map((p) => ({
+                    name: p.name,
+                    util: (p as any).utilization_rate || 0,
+                  }))}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
-                  <YAxis domain={[0,100]} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11 }}
+                    interval={0}
+                    angle={-20}
+                    textAnchor="end"
+                    height={60}
+                  />
+                  <YAxis domain={[0, 100]} />
                   <Tooltip />
                   <Bar dataKey="util" fill="#F59E0B" />
                 </BarChart>
@@ -625,13 +1100,27 @@ export default function Index() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Expected Leftover Inventory</CardTitle>
+              <CardTitle className="text-lg">
+                Expected Leftover Inventory
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={plan.map(p=>({ name: p.name, leftover: (p.expected_leftover||0) }))}>
+                <BarChart
+                  data={plan.map((p) => ({
+                    name: p.name,
+                    leftover: p.expected_leftover || 0,
+                  }))}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11 }}
+                    interval={0}
+                    angle={-20}
+                    textAnchor="end"
+                    height={60}
+                  />
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="leftover" fill="#059669" />
@@ -647,18 +1136,42 @@ export default function Index() {
             <CardContent className="h-[260px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
-                  <Tooltip formatter={(value:any) => (typeof value === 'number' ? Number(value).toFixed(2) : value)} />
+                  <Tooltip
+                    formatter={(value: any) =>
+                      typeof value === "number"
+                        ? Number(value).toFixed(2)
+                        : value
+                    }
+                  />
                   <Pie
-                    data={plan.map(p=>({ name: p.name, value: p.qty * (p.profitPerUnit||0) }))}
+                    data={plan.map((p) => ({
+                      name: p.name,
+                      value: p.qty * (p.profitPerUnit || 0),
+                    }))}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
-                    label={(entry:any) => `${entry.name}: ${Number(entry.value).toFixed(2)}`}
+                    label={(entry: any) =>
+                      `${entry.name}: ${Number(entry.value).toFixed(2)}`
+                    }
                   >
                     {plan.map((_, idx) => (
-                      <Cell key={`cell-${idx}`} fill={["#059669","#F97316","#10B981","#6B21A8","#7C3AED","#F59E0B","#06B6D4"][idx%7]} />
+                      <Cell
+                        key={`cell-${idx}`}
+                        fill={
+                          [
+                            "#059669",
+                            "#F97316",
+                            "#10B981",
+                            "#6B21A8",
+                            "#7C3AED",
+                            "#F59E0B",
+                            "#06B6D4",
+                          ][idx % 7]
+                        }
+                      />
                     ))}
                   </Pie>
                 </PieChart>
@@ -673,36 +1186,58 @@ export default function Index() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {plan.filter(p=>p.promotion).length === 0 ? (
-                <div className="text-sm text-muted-foreground">ไ���่พบคำแนะนำโปรโมชันสำหรับแผนนี้</div>
+              {plan.filter((p) => p.promotion).length === 0 ? (
+                <div className="text-sm text-muted-foreground">
+                  ไ���่พบคำแนะนำโปรโมชันสำหรับแผนนี้
+                </div>
               ) : (
-                plan.filter(p=>p.promotion).map(p=> (
-                  <div key={p.key} className="flex items-start gap-3 rounded-md border p-3 bg-gradient-to-r from-orange-50 to-white">
-                    <div className="text-2xl">⚠️</div>
-                    <div>
-                      <div className="font-medium">{p.name}</div>
-                      <div className="text-sm text-muted-foreground">{p.promotion}</div>
-                      <div className="text-xs mt-1">คาดเหลือ: {p.expected_leftover ?? 0} ชิ้น</div>
+                plan
+                  .filter((p) => p.promotion)
+                  .map((p) => (
+                    <div
+                      key={p.key}
+                      className="flex items-start gap-3 rounded-md border p-3 bg-gradient-to-r from-orange-50 to-white"
+                    >
+                      <div className="text-2xl">⚠️</div>
+                      <div>
+                        <div className="font-medium">{p.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {p.promotion}
+                        </div>
+                        <div className="text-xs mt-1">
+                          คาดเหลือ: {p.expected_leftover ?? 0} ชิ้น
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  ))
               )}
 
               {promotions && (
                 <div className="pt-2">
                   <Separator />
                   <div className="mt-3">
-                    <div className="font-medium mb-2">โปรโมชันแนะนำแบบ Dynamic Pricing</div>
+                    <div className="font-medium mb-2">
+                      โปรโมชันแนะนำแบบ Dynamic Pricing
+                    </div>
 
                     <div className="space-y-2">
-                      <div className="text-sm font-semibold text-orange-600">{promotions.flash}</div>
+                      <div className="text-sm font-semibold text-orange-600">
+                        {promotions.flash}
+                      </div>
 
                       <div className="grid gap-2 mt-2">
-                        {promotions.bundles.map((b:any, idx:number)=> (
-                          <div key={idx} className="flex items-center justify-between rounded-md border p-2 bg-white">
+                        {promotions.bundles.map((b: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded-md border p-2 bg-white"
+                          >
                             <div className="text-sm">
                               <div className="font-medium">{b.title}</div>
-                              <div className="text-xs text-muted-foreground">ราคาปกติ: {currency(b.normal)} → ราคาพิเศษ: {currency(b.special)} (ประหยัด {currency(b.save)})</div>
+                              <div className="text-xs text-muted-foreground">
+                                ราคาปกติ: {currency(b.normal)} → ราคาพิเศษ:{" "}
+                                {currency(b.special)} (ประหยัด{" "}
+                                {currency(b.save)})
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -711,8 +1246,11 @@ export default function Index() {
                       <div className="mt-3">
                         <div className="font-medium">โปรโมชันตามช่วงเวลา</div>
                         <ul className="list-disc pl-5 text-sm text-muted-foreground">
-                          {promotions.time.map((t:any, i:number)=> (
-                            <li key={i}><span className="font-semibold">{t.title}:</span> {t.desc}</li>
+                          {promotions.time.map((t: any, i: number) => (
+                            <li key={i}>
+                              <span className="font-semibold">{t.title}:</span>{" "}
+                              {t.desc}
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -720,8 +1258,13 @@ export default function Index() {
                       <div className="mt-3">
                         <div className="font-medium">โปรโมชัน VIP Member</div>
                         <ul className="list-disc pl-5 text-sm text-muted-foreground">
-                          {promotions.vip.map((v:any,i:number)=> (
-                            <li key={i}>{v.product}: รับ {v.points} พอยต์ทุกการซื้อ{v.vip_double ? ` (VIP x2 = ${v.vip_double} พอยต์)` : ''}</li>
+                          {promotions.vip.map((v: any, i: number) => (
+                            <li key={i}>
+                              {v.product}: รับ {v.points} พอยต์ทุกการซื้อ
+                              {v.vip_double
+                                ? ` (VIP x2 = ${v.vip_double} พอยต์)`
+                                : ""}
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -732,17 +1275,30 @@ export default function Index() {
             </div>
           </CardContent>
         </Card>
-
       </div>
     </div>
   );
 }
 
-function SummaryStat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function SummaryStat({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
   return (
     <div className="rounded-lg border bg-card p-4">
       <div className="text-xs text-muted-foreground">{label}</div>
-      <div className={"mt-1 text-lg font-semibold " + (highlight ? "text-primary" : "")}>{value}</div>
+      <div
+        className={
+          "mt-1 text-lg font-semibold " + (highlight ? "text-primary" : "")
+        }
+      >
+        {value}
+      </div>
     </div>
   );
 }
