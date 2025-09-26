@@ -91,11 +91,13 @@ export default function Index() {
     price: number;
     profitPerUnit: number;
     recipe: { flour: number; butter: number; sugar: number; eggs: number };
+    forecast?: number;
     expected_leftover?: number;
     promotion?: string | null;
     selling_price?: number;
     product_cost?: number;
     gp_margin?: number;
+    utilization_rate?: number;
   };
 
   const [plan, setPlan] = useState<PlanItem[]>(() =>
@@ -179,6 +181,8 @@ export default function Index() {
             if (item.selling_price !== undefined) keyMatch.selling_price = item.selling_price;
             if (item.product_cost !== undefined) keyMatch.product_cost = item.product_cost;
             if (item.gp_margin !== undefined) keyMatch.gp_margin = item.gp_margin;
+            if (item.forecast !== undefined) keyMatch.forecast = item.forecast;
+            if (item.utilization_rate !== undefined) keyMatch.utilization_rate = item.utilization_rate;
           }
         }
         setPlan(rows);
@@ -193,7 +197,7 @@ export default function Index() {
       clearTimeout(timeout);
       console.error("Error calling /api/plan:", err);
       if (err.name === "AbortError") {
-        sonner.error("การร้องขอคำนวณใช้เวลานานเกินไป (timeout)");
+        sonner.error("การร้องขอค��นวณใช้เวลานานเกินไป (timeout)");
       } else {
         sonner.error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
       }
@@ -254,15 +258,18 @@ export default function Index() {
   }
 
   // Load mocked outputs mimicking the Colab notebook
+  const [promotions, setPromotions] = useState<any>(null);
+  const [summary, setSummary] = useState<any>(null);
+
   function loadColabMock() {
     const mock = [
-      { key: 'croissant', product: 'ครัวซองต์', quantity: 40, forecast: 34, profitPerUnit: 34.7, expected_leftover: 6, promotion_suggestion: null },
-      { key: 'butter_cookie', product: 'คุกกี้เนย', quantity: 102, forecast: 85, profitPerUnit: 2.09, expected_leftover: 17, promotion_suggestion: 'โปรโมชั่นแนะนำ: ลดราคา 20%' },
-      { key: 'taiwan_cake', product: 'เค้กไข่ไต้หวัน', quantity: 39, forecast: 33, profitPerUnit: 9.84, expected_leftover: 6, promotion_suggestion: null },
-      { key: 'brownie', product: 'บราวนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'โปรดจัดชุดขายคู่กับกาแฟ' },
-      { key: 'pound_cake', product: 'ขนมปังปอนด์', quantity: 38, forecast: 32, profitPerUnit: 49.58, expected_leftover: 6, promotion_suggestion: 'โปรโมชั่น VIP: รับ 4 พอยต์' },
-      { key: 'choco_cake', product: 'เค้กช็อคโกแลต', quantity: 39, forecast: 33, profitPerUnit: 10.58, expected_leftover: 6, promotion_suggestion: null },
-      { key: 'fruit_tart', product: 'ทาร์ตผลไม้', quantity: 38, forecast: 32, profitPerUnit: 5.03, expected_leftover: 6, promotion_suggestion: null },
+      { key: 'croissant', product: 'ครัวซอ��ต์', quantity: 40, forecast: 34, profitPerUnit: 34.7, expected_leftover: 6, promotion_suggestion: null, selling_price:50, product_cost:15.3, gp_margin:69.0, utilization_rate:85.0 },
+      { key: 'butter_cookie', product: 'คุกกี้เนย', quantity: 102, forecast: 85, profitPerUnit: 2.09, expected_leftover: 17, promotion_suggestion: 'ลดราคา 20%', selling_price:15, product_cost:12.91, gp_margin:14.0, utilization_rate:83.3 },
+      { key: 'taiwan_cake', product: 'เค้กไข่ไต้หวัน', quantity: 39, forecast: 33, profitPerUnit: 9.84, expected_leftover: 6, promotion_suggestion: null, selling_price:40, product_cost:30.16, gp_margin:25.0, utilization_rate:84.6 },
+      { key: 'brownie', product: 'บราวนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'จัดชุดขายคู่กับกาแฟ', selling_price:55, product_cost:32.47, gp_margin:41.0, utilization_rate:84.1 },
+      { key: 'pound_cake', product: 'ขนมปังปอนด์', quantity: 38, forecast: 32, profitPerUnit: 49.58, expected_leftover: 6, promotion_suggestion: 'VIP: รับ 4 พอยต์', selling_price:80, product_cost:30.42, gp_margin:62.0, utilization_rate:84.2 },
+      { key: 'choco_cake', product: 'เค้กช็อคโกแลต', quantity: 39, forecast: 33, profitPerUnit: 10.58, expected_leftover: 6, promotion_suggestion: null, selling_price:65, product_cost:54.42, gp_margin:16.0, utilization_rate:84.6 },
+      { key: 'fruit_tart', product: 'ทาร์ตผลไม้', quantity: 38, forecast: 32, profitPerUnit: 5.03, expected_leftover: 6, promotion_suggestion: null, selling_price:45, product_cost:39.97, gp_margin:11.0, utilization_rate:84.2 },
     ];
 
     const rows: PlanItem[] = productDerived.map((p) => ({ key: p.key, name: p.name, qty: 0, price: p.price, profitPerUnit: p.profitPerUnit, recipe: p.recipe }));
@@ -274,8 +281,44 @@ export default function Index() {
         match.expected_leftover = item.expected_leftover;
         match.profitPerUnit = item.profitPerUnit;
         match.selling_price = item.selling_price;
+        match.product_cost = item.product_cost;
+        match.gp_margin = item.gp_margin;
+        (match as any).utilization_rate = item.utilization_rate;
+        (match as any).forecast = item.forecast;
       }
     }
+
+    // set up higher-level promotions and KPIs
+    setPromotions({
+      flash: 'FLASH SALE: สินค้าบางรายการลดล้างสต็อกสูงสุด 30%',
+      bundles: [
+        { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
+        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
+        { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
+      ],
+      time: [
+        { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น แถม 1 ชิ้น' },
+        { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดราคา 15%' },
+        { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
+      ],
+      vip: [
+        { product: 'ขนมปังปอนด์', points: 4 },
+        { product: 'ครัวซองต์', points: 2 },
+        { product: 'บราวนี่', points: 2 },
+      ],
+    });
+
+    setSummary({
+      total_production: 340,
+      total_demand: 286,
+      revenue: 14795,
+      cost: 9331,
+      profit: 5464,
+      avg_margin_pct: 36.9,
+      expected_leftover: 54,
+      waste_rate_pct: 15.9,
+    });
+
     setPlan(rows);
     setLastPlanId('colab-mock-1');
     sonner.success('โหลดตัวอย่างจาก Colab เรียบร้อย');
@@ -385,7 +428,7 @@ export default function Index() {
 
             <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
               <div>
-                <div className="font-medium mb-2">ว��ตถุดิบที่จะใช้</div>
+                <div className="font-medium mb-2">วัตถุดิบที่จะใช้</div>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>• {TH.flour}: {usage.flour.toLocaleString()}</li>
                   <li>• {TH.eggs}: {usage.eggs.toLocaleString()}</li>
@@ -394,7 +437,7 @@ export default function Index() {
                 </ul>
               </div>
               <div>
-                <div className="font-medium mb-2">วัตถุดิบที่เหลือ</div>
+                <div className="font-medium mb-2">วัต���ุดิบที่เหลือ</div>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>• {TH.flour}: {remaining.flour.toLocaleString()}</li>
                   <li>• {TH.eggs}: {remaining.eggs.toLocaleString()}</li>
@@ -402,6 +445,22 @@ export default function Index() {
                   <li>• {TH.sugar}: {remaining.sugar.toLocaleString()}</li>
                 </ul>
               </div>
+
+              {summary && (
+                <div className="col-span-2 mt-3 rounded-md border bg-muted p-3 text-sm">
+                  <div className="font-medium mb-2">สรุปการเงินและ KPI</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>ปริมาณการผลิตรวม:</div><div className="font-semibold">{summary.total_production.toLocaleString()} ชิ้น</div>
+                    <div>ความต้องการรวม:</div><div className="font-semibold">{summary.total_demand.toLocaleString()} ชิ้น</div>
+                    <div>รายได้คาดการณ์:</div><div className="font-semibold">{currency(summary.revenue)}</div>
+                    <div>ต้นทุนรวม:</div><div className="font-semibold">{currency(summary.cost)}</div>
+                    <div>กำไรรวม:</div><div className="font-semibold">{currency(summary.profit)}</div>
+                    <div>อัตรากำไรเฉลี่ย:</div><div className="font-semibold">{summary.avg_margin_pct}%</div>
+                    <div>สินค้าคงเหลือคาด:</div><div className="font-semibold">{summary.expected_leftover} ชิ้น</div>
+                    <div>อัตราของเสีย:</div><div className="font-semibold">{summary.waste_rate_pct}%</div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-3 pt-1">
@@ -443,9 +502,13 @@ export default function Index() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[30%]">เมนู</TableHead>
+                  <TableHead className="w-[20%]">เมนู</TableHead>
+                  <TableHead className="text-right">ความต้องการ</TableHead>
                   <TableHead className="text-right">จำนวนแนะนำ</TableHead>
+                  <TableHead className="text-right">คาดว่าเหลือ</TableHead>
                   <TableHead className="text-right">กำไร/หน่วย</TableHead>
+                  <TableHead className="text-right">GP Margin</TableHead>
+                  <TableHead className="text-right">การใช้</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
                   <TableHead className="text-right">คำแนะนำโปรโมชัน</TableHead>
                 </TableRow>
@@ -454,6 +517,7 @@ export default function Index() {
                 {plan.map((row) => (
                   <TableRow key={row.key}>
                     <TableCell className="font-medium">{row.name}</TableCell>
+                    <TableCell className="text-right">{(row as any).forecast ? (row as any).forecast.toLocaleString() : '-'}</TableCell>
                     <TableCell className="text-right">
                       {manual ? (
                         <Input
@@ -466,7 +530,10 @@ export default function Index() {
                         <span>{row.qty.toLocaleString()}</span>
                       )}
                     </TableCell>
+                    <TableCell className="text-right">{row.expected_leftover !== undefined ? row.expected_leftover : '-'}</TableCell>
                     <TableCell className="text-right">{currency(row.profitPerUnit)}</TableCell>
+                    <TableCell className="text-right">{row.gp_margin !== undefined ? `${row.gp_margin}%` : '-'}</TableCell>
+                    <TableCell className="text-right">{(row as any).utilization_rate !== undefined ? `${(row as any).utilization_rate}%` : '-'}</TableCell>
                     <TableCell className="text-right">{currency(row.qty * row.profitPerUnit)}</TableCell>
                     <TableCell className="text-right"><div className="text-sm text-amber-700 font-medium">{row.promotion || '-'}</div></TableCell>
                   </TableRow>
@@ -604,6 +671,48 @@ export default function Index() {
                     </div>
                   </div>
                 ))
+              )}
+
+              {promotions && (
+                <div className="pt-2">
+                  <Separator />
+                  <div className="mt-3">
+                    <div className="font-medium mb-2">โปรโมชันแนะนำแบบ Dynamic Pricing</div>
+
+                    <div className="space-y-2">
+                      <div className="text-sm font-semibold text-orange-600">{promotions.flash}</div>
+
+                      <div className="grid gap-2 mt-2">
+                        {promotions.bundles.map((b:any, idx:number)=> (
+                          <div key={idx} className="flex items-center justify-between rounded-md border p-2 bg-white">
+                            <div className="text-sm">
+                              <div className="font-medium">{b.title}</div>
+                              <div className="text-xs text-muted-foreground">ราคาปกติ: {currency(b.normal)} → ราคาพิเศษ: {currency(b.special)} (ประหยัด {currency(b.save)})</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-3">
+                        <div className="font-medium">โปรโมชันตามช่วงเวลา</div>
+                        <ul className="list-disc pl-5 text-sm text-muted-foreground">
+                          {promotions.time.map((t:any, i:number)=> (
+                            <li key={i}><span className="font-semibold">{t.title}:</span> {t.desc}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="mt-3">
+                        <div className="font-medium">โปรโมชัน VIP Member</div>
+                        <ul className="list-disc pl-5 text-sm text-muted-foreground">
+                          {promotions.vip.map((v:any,i:number)=> (
+                            <li key={i}>{v.product}: รับ {v.points} พอยต์ทุกการซื้อ</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </CardContent>
