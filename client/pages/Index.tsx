@@ -123,7 +123,37 @@ export default function Index() {
   const totalQty = useMemo(() => plan.reduce((a, b) => a + b.qty, 0), [plan]);
   const totalProfit = useMemo(() => plan.reduce((a, b) => a + b.qty * b.profitPerUnit, 0), [plan]);
 
-  function recalcPlan() {
+  async function recalcPlan() {
+    // Call backend API to compute plan (Python model if available)
+    const payload = { inputs, branch, date: new Date().toISOString(), weather: inputs.weather, special_day: inputs.special_day };
+    try {
+      const resp = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const data = await resp.json();
+      if (data && data.ok && data.result && data.result.plan) {
+        const remotePlan = data.result.plan as any[];
+        // Map remotePlan to local PlanItem[]
+        const rows: PlanItem[] = productDerived.map((p) => ({ key: p.key, name: p.name, qty: 0, price: p.price, profitPerUnit: p.profitPerUnit, recipe: p.recipe }));
+        for (const item of remotePlan) {
+          // try match by key or name
+          const keyMatch = rows.find((r) => r.key === item.key || r.name === item.product || r.key === item.product);
+          if (keyMatch) keyMatch.qty = item.quantity || item.qty || keyMatch.qty;
+        }
+        setPlan(rows);
+        setLastPlanId(data.id || null);
+        sonner.success("คำนวณแผนการผลิตเสร็จแล้ว");
+      } else {
+        sonner.error("ไม่สามารถคำนวณแผนจากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
+        // fallback to local
+        recalcLocal();
+      }
+    } catch (err) {
+      console.error(err);
+      sonner.error("เซิร์ฟเวอร์ตอบกลับไม่สำเร็จ — ใช้โลคัลแทน");
+      recalcLocal();
+    }
+  }
+
+  function recalcLocal() {
     const stock = { ...inputs } as { flour: number; eggs: number; butter: number; sugar: number; capacity: number };
     const rows: PlanItem[] = productDerived.map((p) => ({
       key: p.key,
