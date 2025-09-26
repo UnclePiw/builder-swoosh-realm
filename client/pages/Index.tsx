@@ -42,7 +42,7 @@ const PRODUCTS: {
   recipe: { flour: number; butter: number; sugar: number; eggs: number };
 }[] = [
   { key: "croissant", name: "ครัวซองต์", price: 50, recipe: { flour: 50, butter: 30, sugar: 10, eggs: 1 } },
-  { key: "butter_cookie", name: "คุกกี้เนย", price: 15, recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 } },
+  { key: "butter_cookie", name: "คุกกี���เนย", price: 15, recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 } },
   { key: "taiwan_cake", name: "เค้กไข่ไต้หวัน", price: 40, recipe: { flour: 30, butter: 5, sugar: 25, eggs: 2 } },
   { key: "brownie", name: "บราวนี่", price: 55, recipe: { flour: 25, butter: 20, sugar: 30, eggs: 1 } },
   { key: "pound_cake", name: "ขนมปังปอนด์", price: 80, recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 } },
@@ -133,6 +133,12 @@ export default function Index() {
 
   async function recalcPlan() {
     // Call backend API to compute plan (Python model if available)
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      sonner.error('ไม่สามารถเชื่อมต่ออินเทอร์เน็ต — ใช้โลคัลแทน');
+      recalcLocal();
+      return;
+    }
+
     const payload = { inputs, branch, date: new Date().toISOString(), weather: inputs.weather, special_day: inputs.special_day };
 
     const controller = new AbortController();
@@ -267,7 +273,7 @@ export default function Index() {
       { key: 'croissant', product: 'ครัวซอ��ต์', quantity: 40, forecast: 34, profitPerUnit: 34.7, expected_leftover: 6, promotion_suggestion: null, selling_price:50, product_cost:15.3, gp_margin:69.0, utilization_rate:85.0 },
       { key: 'butter_cookie', product: 'คุกกี้เนย', quantity: 102, forecast: 85, profitPerUnit: 2.09, expected_leftover: 17, promotion_suggestion: 'ลดราคา 20%', selling_price:15, product_cost:12.91, gp_margin:14.0, utilization_rate:83.3 },
       { key: 'taiwan_cake', product: 'เค้กไข่ไต้หวัน', quantity: 39, forecast: 33, profitPerUnit: 9.84, expected_leftover: 6, promotion_suggestion: null, selling_price:40, product_cost:30.16, gp_margin:25.0, utilization_rate:84.6 },
-      { key: 'brownie', product: 'บร���วนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'จัดชุดขายคู่กับกาแฟ', selling_price:55, product_cost:32.47, gp_margin:41.0, utilization_rate:84.1 },
+      { key: 'brownie', product: 'บราวนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'จัดชุดขายคู่กับกาแฟ', selling_price:55, product_cost:32.47, gp_margin:41.0, utilization_rate:84.1 },
       { key: 'pound_cake', product: 'ขนมปังปอนด์', quantity: 38, forecast: 32, profitPerUnit: 49.58, expected_leftover: 6, promotion_suggestion: 'VIP: รับ 4 พอยต์', selling_price:80, product_cost:30.42, gp_margin:62.0, utilization_rate:84.2 },
       { key: 'choco_cake', product: 'เค้กช็อคโกแลต', quantity: 39, forecast: 33, profitPerUnit: 10.58, expected_leftover: 6, promotion_suggestion: null, selling_price:65, product_cost:54.42, gp_margin:16.0, utilization_rate:84.6 },
       { key: 'fruit_tart', product: 'ทาร์ตผลไม้', quantity: 38, forecast: 32, profitPerUnit: 5.03, expected_leftover: 6, promotion_suggestion: null, selling_price:45, product_cost:39.97, gp_margin:11.0, utilization_rate:84.2 },
@@ -303,7 +309,7 @@ export default function Index() {
         { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
       ],
       vip: [
-        { product: 'ขนมปังปอนด์', points: 4, vip_double: 8 },
+        { product: 'ขนมป��งปอนด์', points: 4, vip_double: 8 },
         { product: 'ครัวซองต์', points: 2, vip_double: 4 },
         { product: 'บราวนี่', points: 2, vip_double: 4 },
       ],
@@ -451,7 +457,7 @@ export default function Index() {
                 <div className="col-span-2 mt-3 rounded-md border bg-muted p-3 text-sm">
                   <div className="font-medium mb-2">สรุปการเงินและ KPI</div>
                   <div className="grid grid-cols-2 gap-2">
-                    <div>ปริมาณการผลิตรวม:</div><div className="font-semibold">{summary.total_production.toLocaleString()} ชิ้น</div>
+                    <div>ปริมาณการผลิตรวม:</div><div className="font-semibold">{summary.total_production.toLocaleString()} ชิ���น</div>
                     <div>ความต้องการรวม:</div><div className="font-semibold">{summary.total_demand.toLocaleString()} ชิ้น</div>
                     <div>รายได้คาดการณ์:</div><div className="font-semibold">{currency(summary.revenue)}</div>
                     <div>ต้นทุนรวม:</div><div className="font-semibold">{currency(summary.cost)}</div>
