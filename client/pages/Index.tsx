@@ -105,8 +105,7 @@ export default function Index() {
   );
 
   useEffect(() => {
-    // Load baseline calculation and then populate Colab mock so promotions appear by default in the prototype
-    recalcPlan();
+    // Only load Colab mock on mount to avoid triggering network calls in preview environments
     loadColabMock();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -268,7 +267,7 @@ export default function Index() {
       { key: 'croissant', product: 'ครัวซอ��ต์', quantity: 40, forecast: 34, profitPerUnit: 34.7, expected_leftover: 6, promotion_suggestion: null, selling_price:50, product_cost:15.3, gp_margin:69.0, utilization_rate:85.0 },
       { key: 'butter_cookie', product: 'คุกกี้เนย', quantity: 102, forecast: 85, profitPerUnit: 2.09, expected_leftover: 17, promotion_suggestion: 'ลดราคา 20%', selling_price:15, product_cost:12.91, gp_margin:14.0, utilization_rate:83.3 },
       { key: 'taiwan_cake', product: 'เค้กไข่ไต้หวัน', quantity: 39, forecast: 33, profitPerUnit: 9.84, expected_leftover: 6, promotion_suggestion: null, selling_price:40, product_cost:30.16, gp_margin:25.0, utilization_rate:84.6 },
-      { key: 'brownie', product: 'บราวนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'จัดชุดขายคู่กับกาแฟ', selling_price:55, product_cost:32.47, gp_margin:41.0, utilization_rate:84.1 },
+      { key: 'brownie', product: 'บร���วนี่', quantity: 44, forecast: 37, profitPerUnit: 22.53, expected_leftover: 7, promotion_suggestion: 'จัดชุดขายคู่กับกาแฟ', selling_price:55, product_cost:32.47, gp_margin:41.0, utilization_rate:84.1 },
       { key: 'pound_cake', product: 'ขนมปังปอนด์', quantity: 38, forecast: 32, profitPerUnit: 49.58, expected_leftover: 6, promotion_suggestion: 'VIP: รับ 4 พอยต์', selling_price:80, product_cost:30.42, gp_margin:62.0, utilization_rate:84.2 },
       { key: 'choco_cake', product: 'เค้กช็อคโกแลต', quantity: 39, forecast: 33, profitPerUnit: 10.58, expected_leftover: 6, promotion_suggestion: null, selling_price:65, product_cost:54.42, gp_margin:16.0, utilization_rate:84.6 },
       { key: 'fruit_tart', product: 'ทาร์ตผลไม้', quantity: 38, forecast: 32, profitPerUnit: 5.03, expected_leftover: 6, promotion_suggestion: null, selling_price:45, product_cost:39.97, gp_margin:11.0, utilization_rate:84.2 },
