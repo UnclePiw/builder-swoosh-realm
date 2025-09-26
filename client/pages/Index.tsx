@@ -349,7 +349,7 @@ export default function Index() {
               </Button>
 
               <Button className="w-full md:w-auto" onClick={() => {
-                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด คำนวณ ก่อน');
+                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน');
                 const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
                 navigator.clipboard?.writeText(url);
                 sonner.success('คัดลอกลิงก์แผนไปยัง Clipboard');
@@ -376,10 +376,11 @@ export default function Index() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[40%]">เมนู</TableHead>
+                  <TableHead className="w-[30%]">เมนู</TableHead>
                   <TableHead className="text-right">จำนวนแนะนำ</TableHead>
                   <TableHead className="text-right">กำไร/หน่วย</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
+                  <TableHead className="text-right">คำแนะนำโปรโมชัน</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
