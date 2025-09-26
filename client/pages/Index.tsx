@@ -406,7 +406,7 @@ export default function Index() {
     const mock = [
       {
         key: "croissant",
-        product: "ครัวซอ��ต์",
+        product: "ครัวซองต์",
         quantity: 40,
         forecast: 34,
         profitPerUnit: 34.7,
@@ -527,7 +527,7 @@ export default function Index() {
 
     // set up higher-level promotions and KPIs
     setPromotions({
-      flash: "โปรโมชัน FLASH SALE (ลดล้างสต��อก)",
+      flash: "โปรโมชัน FLASH SALE (ลดล้างสต๊อก)",
       bundles: [
         {
           title: "Bundle 1: ครัวซองต์ + บราวนี่",
@@ -551,12 +551,12 @@ export default function Index() {
       time: [
         {
           title: "Morning Rush (7-9 น.)",
-          desc: "ซื้อ ครัวซองต์ 3 ชิ้น ���ถม 1 ชิ้น",
+          desc: "ซื้อ ครัวซองต์ 3 ชิ้น แถม 1 ชิ้น",
         },
         { title: "Afternoon Delight (14-16 น.)", desc: "ครัวซองต์ ลดราคา 15%" },
         {
           title: "Evening Clear-out (18-20 น.)",
-          desc: "คุ��กี้เนย ลดราคา 20-25%",
+          desc: "คุกกี้เนย ลดราคา 20-25%",
         },
       ],
       vip: [
