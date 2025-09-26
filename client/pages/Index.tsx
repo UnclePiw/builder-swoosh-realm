@@ -160,7 +160,7 @@ export default function Index() {
       }
     } catch (err) {
       console.error(err);
-      sonner.error("เซิร์ฟเวอร์ตอบกลับไม่สำเร็จ — ใช้โลคัลแทน");
+      sonner.error("เซิร์ฟเวอร์ตอ���กลับไม่สำเร็จ — ใช้โลคัลแทน");
       recalcLocal();
     }
   }
@@ -446,6 +446,31 @@ export default function Index() {
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl">แผนโปรโมชันแนะนำ</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {plan.filter(p=>p.promotion).length === 0 ? (
+                <div className="text-sm text-muted-foreground">ไม่พบคำแนะ���ำโปรโมชันสำหรับแผนนี้</div>
+              ) : (
+                plan.filter(p=>p.promotion).map(p=> (
+                  <div key={p.key} className="flex items-start gap-3 rounded-md border p-3 bg-gradient-to-r from-orange-50 to-white">
+                    <div className="text-2xl">⚠️</div>
+                    <div>
+                      <div className="font-medium">{p.name}</div>
+                      <div className="text-sm text-muted-foreground">{p.promotion}</div>
+                      <div className="text-xs mt-1">คาดเหลือ: {p.expected_leftover ?? 0} ชิ้น</div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   );
