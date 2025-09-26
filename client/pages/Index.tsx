@@ -401,6 +401,7 @@ export default function Index() {
                     </TableCell>
                     <TableCell className="text-right">{currency(row.profitPerUnit)}</TableCell>
                     <TableCell className="text-right">{currency(row.qty * row.profitPerUnit)}</TableCell>
+                    <TableCell className="text-right"><div className="text-sm text-amber-700 font-medium">{row.promotion || '-'}</div></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
