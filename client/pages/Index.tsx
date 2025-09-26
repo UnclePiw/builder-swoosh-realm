@@ -131,9 +131,40 @@ export default function Index() {
   async function recalcPlan() {
     // Call backend API to compute plan (Python model if available)
     const payload = { inputs, branch, date: new Date().toISOString(), weather: inputs.weather, special_day: inputs.special_day };
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
     try {
-      const resp = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      const data = await resp.json();
+      const resp = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: controller.signal });
+      clearTimeout(timeout);
+
+      if (!resp.ok) {
+        const txt = await resp.text().catch(() => "");
+        console.error("/api/plan failed", resp.status, txt);
+        sonner.error("เซิร์ฟเวอร์คำนวณล้มเหลว — ใช้โลคัลแทน");
+        recalcLocal();
+        return;
+      }
+
+      const text = await resp.text();
+      if (!text) {
+        console.error("Empty response from /api/plan");
+        sonner.error("เซิร์ฟเวอร์ไม่ส่งข้อมูล — ใช้โลคัลแทน");
+        recalcLocal();
+        return;
+      }
+
+      let data: any;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        console.error("Failed to parse JSON from /api/plan:", text, parseErr);
+        sonner.error("ข้อมูลจากเซิร์ฟเวอร์ไม่ถูกต้อง — ใช้โลคัลแทน");
+        recalcLocal();
+        return;
+      }
+
       if (data && data.ok && data.result && data.result.plan) {
         const remotePlan = data.result.plan as any[];
         // Map remotePlan to local PlanItem[]
@@ -152,15 +183,20 @@ export default function Index() {
         }
         setPlan(rows);
         setLastPlanId(data.id || null);
-        sonner.success("คำนวณแผนการผลิตเสร็จแล้ว");
+        sonner.success("คำนวณแผนการผลิตเสร็จแล้��");
       } else {
+        console.warn("/api/plan returned unexpected payload", data);
         sonner.error("ไม่สามารถคำนวณแผนจากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
-        // fallback to local
         recalcLocal();
       }
-    } catch (err) {
-      console.error(err);
-      sonner.error("เซิร์ฟเวอร์ตอ���กลับไม่สำเร็จ — ใช้โลคัลแทน");
+    } catch (err: any) {
+      clearTimeout(timeout);
+      console.error("Error calling /api/plan:", err);
+      if (err.name === "AbortError") {
+        sonner.error("การร้องขอคำนวณใช้เวลานานเกินไป (timeout)");
+      } else {
+        sonner.error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
+      }
       recalcLocal();
     }
   }
@@ -412,7 +448,7 @@ export default function Index() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl">ปริมาณที่ควรผลิตต่อเมนู</CardTitle>
+              <CardTitle className="text-xl">ปริมาณที่ค���รผลิตต่อเมนู</CardTitle>
             </CardHeader>
             <CardContent className="h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -454,7 +490,7 @@ export default function Index() {
           <CardContent>
             <div className="space-y-3">
               {plan.filter(p=>p.promotion).length === 0 ? (
-                <div className="text-sm text-muted-foreground">ไม่พบคำแนะ���ำโปรโมชันสำหรับแผนนี้</div>
+                <div className="text-sm text-muted-foreground">ไม่พบคำแนะนำโปรโมชันสำหรับแผนนี้</div>
               ) : (
                 plan.filter(p=>p.promotion).map(p=> (
                   <div key={p.key} className="flex items-start gap-3 rounded-md border p-3 bg-gradient-to-r from-orange-50 to-white">
