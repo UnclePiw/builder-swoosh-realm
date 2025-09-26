@@ -304,9 +304,9 @@ export default function Index() {
         { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
       ],
       time: [
-        { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น แถม 1 ชิ้น' },
+        { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น ���ถม 1 ชิ้น' },
         { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดราคา 15%' },
-        { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี��เนย ลดราคา 20-25%' },
+        { title: 'Evening Clear-out (18-20 น.)', desc: 'คุ��กี้เนย ลดราคา 20-25%' },
       ],
       vip: [
         { product: 'ขนมปังปอนด์', points: 4, vip_double: 8 },
@@ -457,7 +457,7 @@ export default function Index() {
                 <div className="col-span-2 mt-3 rounded-md border bg-muted p-3 text-sm">
                   <div className="font-medium mb-2">สรุปการเงินและ KPI</div>
                   <div className="grid grid-cols-2 gap-2">
-                    <div>ปริมาณการผลิตรวม:</div><div className="font-semibold">{summary.total_production.toLocaleString()} ชิ���น</div>
+                    <div>ปริมาณการผลิตรวม:</div><div className="font-semibold">{summary.total_production.toLocaleString()} ชิ้น</div>
                     <div>ความต้องการรวม:</div><div className="font-semibold">{summary.total_demand.toLocaleString()} ชิ้น</div>
                     <div>รายได้คาดการณ์:</div><div className="font-semibold">{currency(summary.revenue)}</div>
                     <div>ต้นทุนรวม:</div><div className="font-semibold">{currency(summary.cost)}</div>
