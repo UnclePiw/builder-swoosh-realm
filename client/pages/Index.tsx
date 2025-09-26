@@ -192,7 +192,7 @@ export default function Index() {
         sonner.success("คำนวณแผนการผลิตเสร็จแล้ว");
       } else {
         console.warn("/api/plan returned unexpected payload", data);
-        sonner.error("ไม่สามา���ถคำนวณแผ��จากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
+        sonner.error("ไม่สามารถคำนวณแผ��จากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
         recalcLocal();
       }
     } catch (err: any) {
@@ -292,7 +292,7 @@ export default function Index() {
 
     // set up higher-level promotions and KPIs
     setPromotions({
-      flash: 'FLASH SALE: สินค้าบางรายการลดล้างสต็อกสูงสุด 30%',
+      flash: 'โปรโมชัน FLASH SALE (ลดล้างสต็อก)',
       bundles: [
         { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
         { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
@@ -304,9 +304,9 @@ export default function Index() {
         { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
       ],
       vip: [
-        { product: 'ขนมป���งปอนด์', points: 4 },
-        { product: 'ครัวซองต์', points: 2 },
-        { product: 'บราวนี่', points: 2 },
+        { product: 'ขนมปังปอนด์', points: 4, vip_double: 8 },
+        { product: 'ครัวซองต์', points: 2, vip_double: 4 },
+        { product: 'บราวนี่', points: 2, vip_double: 4 },
       ],
     });
 
@@ -323,7 +323,7 @@ export default function Index() {
 
     setPlan(rows);
     setLastPlanId('colab-mock-1');
-    sonner.success('โหลดตัวอย่างจาก Colab เรียบร้อย');
+    sonner.success('โหลดตัวอย่างจาก Colab เ��ียบร้อย');
   }
 
   function handleConfirm() {
