@@ -20,7 +20,7 @@ const TH = {
   sugar: "น้ำ���าล (g)",
   capacity: "กำลังการผลิตต่อวัน (ชิ้น)",
   profitTarget: "เป้าหมายกำไร (ไม่บังคับ)",
-  calculate: "คำนวณแผนการผลิต",
+  calculate: "คำนวณแผนการผ��ิต",
   confirm: "ยืนยันแผนการผลิต",
   manual: "ปรับเอง (Manual Adjust)",
   recalc: "Recalculate",
@@ -261,6 +261,25 @@ export default function Index() {
                 <Label className="flex items-center gap-2"><ChefHat className="size-4 text-primary" /> {TH.capacity}</Label>
                 <Input type="number" value={inputs.capacity} onChange={(e) => handleInputChange("capacity", Number(e.target.value))} />
               </div>
+
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">สภาพอากาศ</Label>
+                <select className="w-full rounded-md border px-3 py-2" value={inputs.weather} onChange={(e) => handleInputChange("weather", e.target.value)}>
+                  <option value="แดด">แดด</option>
+                  <option value="ฝน">ฝน</option>
+                  <option value="ครึ้ม">ครึ้ม</option>
+                  <option value="เมฆเยอะ">เมฆเยอะ</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">วันพิเศษ / โปรโมชัน</Label>
+                <div className="flex items-center gap-3">
+                  <input id="special" type="checkbox" checked={Boolean(inputs.special_day)} onChange={(e) => handleInputChange("special_day", e.target.checked)} />
+                  <label htmlFor="special" className="text-sm text-muted-foreground">เช่น วันแม่, งานเทศกาล</label>
+                </div>
+              </div>
+
               <div className="space-y-2 col-span-2">
                 <Label className="flex items-center gap-2"><CircleDollarSign className="size-4 text-primary" /> {TH.profitTarget}</Label>
                 <Input placeholder="เช่น 50,000" value={inputs.profitTarget} onChange={(e) => handleInputChange("profitTarget", e.target.value)} />
