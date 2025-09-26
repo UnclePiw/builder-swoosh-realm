@@ -192,7 +192,7 @@ export default function Index() {
         sonner.success("คำนวณแผนการผลิตเสร็จแล้ว");
       } else {
         console.warn("/api/plan returned unexpected payload", data);
-        sonner.error("ไม่สามารถคำนวณแผ��จากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
+        sonner.error("ไม่สามา���ถคำนวณแผ��จากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
         recalcLocal();
       }
     } catch (err: any) {
@@ -292,10 +292,10 @@ export default function Index() {
 
     // set up higher-level promotions and KPIs
     setPromotions({
-      flash: 'FLASH SALE: สินค้าบางรายการลด��้างสต็อกสูงสุด 30%',
+      flash: 'FLASH SALE: สินค้าบางรายการลดล้างสต็อกสูงสุด 30%',
       bundles: [
         { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
-        { title: 'Bundle 2: ครัวซอ��ต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
+        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
         { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
       ],
       time: [
@@ -304,7 +304,7 @@ export default function Index() {
         { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
       ],
       vip: [
-        { product: 'ขนมปังปอนด์', points: 4 },
+        { product: 'ขนมป���งปอนด์', points: 4 },
         { product: 'ครัวซองต์', points: 2 },
         { product: 'บราวนี่', points: 2 },
       ],
@@ -537,7 +537,7 @@ export default function Index() {
                     <TableCell className="text-right">{row.gp_margin !== undefined ? `${row.gp_margin}%` : '-'}</TableCell>
                     <TableCell className="text-right">{(row as any).utilization_rate !== undefined ? `${(row as any).utilization_rate}%` : '-'}</TableCell>
                     <TableCell className="text-right">{currency(row.qty * row.profitPerUnit)}</TableCell>
-                    <TableCell className="text-right"><div className="text-sm text-amber-700 font-medium">{row.promotion || '-'}</div></TableCell>
+                    <TableCell className="text-right"><div className="text-sm text-orange-600 font-medium">{row.promotion || '-'}</div></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
