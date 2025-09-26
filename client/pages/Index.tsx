@@ -20,7 +20,7 @@ const TH = {
   sugar: "น้ำ���าล (g)",
   capacity: "กำลังการผลิตต่อวัน (ชิ้น)",
   profitTarget: "เป้าหมายกำไร (ไม่บังคับ)",
-  calculate: "คำนวณแผนการผ��ิต",
+  calculate: "คำนวณแผนการผลิต",
   confirm: "ยืนยันแผนการผลิต",
   manual: "ปรับเอง (Manual Adjust)",
   recalc: "Recalculate",
@@ -45,7 +45,7 @@ const PRODUCTS: {
   { key: "butter_cookie", name: "คุกกี้เนย", price: 15, recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 } },
   { key: "taiwan_cake", name: "เค้กไข่ไต้หวัน", price: 40, recipe: { flour: 30, butter: 5, sugar: 25, eggs: 2 } },
   { key: "brownie", name: "บราวนี่", price: 55, recipe: { flour: 25, butter: 20, sugar: 30, eggs: 1 } },
-  { key: "pound_cake", name: "ขนมปังปอนด์", price: 80, recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 } },
+  { key: "pound_cake", name: "ขนมปังปอ���ด์", price: 80, recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 } },
   { key: "macaron", name: "มาการอน", price: 25, recipe: { flour: 15, butter: 8, sugar: 20, eggs: 2 } },
   { key: "choco_cake", name: "เค้กช็อคโกแลต", price: 65, recipe: { flour: 35, butter: 25, sugar: 35, eggs: 2 } },
   { key: "fruit_tart", name: "ทาร์ตผลไม้", price: 45, recipe: { flour: 40, butter: 20, sugar: 15, eggs: 1 } },
@@ -334,6 +334,15 @@ export default function Index() {
               </Button>
               <Button variant="secondary" onClick={recalcPlan}>
                 <RotateCcw className="mr-2 size-4" /> {TH.recalc}
+              </Button>
+
+              <Button className="w-full md:w-auto" onClick={() => {
+                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด คำนวณ ก่อน');
+                const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
+                navigator.clipboard?.writeText(url);
+                sonner.success('คัดลอกลิงก์แผนไปยัง Clipboard');
+              }}>
+                แชร์แผน
               </Button>
             </div>
           </CardContent>
