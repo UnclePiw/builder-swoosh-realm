@@ -183,7 +183,7 @@ export default function Index() {
         }
         setPlan(rows);
         setLastPlanId(data.id || null);
-        sonner.success("คำนวณแผนการผลิตเสร็จแล้��");
+        sonner.success("คำนวณแผนการผลิตเสร็จแล้ว");
       } else {
         console.warn("/api/plan returned unexpected payload", data);
         sonner.error("ไม่สามารถคำนวณแผนจากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
@@ -338,6 +338,9 @@ export default function Index() {
               <Button className="flex-1" onClick={recalcPlan}>
                 <Calculator className="mr-2 size-4" /> {TH.calculate}
               </Button>
+              <Button variant="outline" onClick={() => loadColabMock()}>
+                โหลดตัวอย่างจาก Colab
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -448,7 +451,7 @@ export default function Index() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl">ปริมาณที่ค���รผลิตต่อเมนู</CardTitle>
+              <CardTitle className="text-xl">ปริมาณที่ควรผลิตต่อเมนู</CardTitle>
             </CardHeader>
             <CardContent className="h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
