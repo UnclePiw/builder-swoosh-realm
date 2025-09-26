@@ -323,7 +323,7 @@ export default function Index() {
 
     setPlan(rows);
     setLastPlanId('colab-mock-1');
-    sonner.success('โหลดตัวอย่างจาก Colab เ��ียบร้อย');
+    sonner.success('โหลดตัวอย่างจาก Colab เรียบร้อย');
   }
 
   function handleConfirm() {
@@ -412,7 +412,7 @@ export default function Index() {
                 <Calculator className="mr-2 size-4" /> {TH.calculate}
               </Button>
               <Button variant="outline" onClick={() => loadColabMock()}>
-                โหลดตัวอย่างจาก Colab
+                โหลดตัวอย่��งจาก Colab
               </Button>
             </div>
           </CardContent>
@@ -708,7 +708,7 @@ export default function Index() {
                         <div className="font-medium">โปรโมชัน VIP Member</div>
                         <ul className="list-disc pl-5 text-sm text-muted-foreground">
                           {promotions.vip.map((v:any,i:number)=> (
-                            <li key={i}>{v.product}: รับ {v.points} พอยต์ทุกการซื้อ</li>
+                            <li key={i}>{v.product}: รับ {v.points} พอยต์ทุกการซื้อ{v.vip_double ? ` (VIP x2 = ${v.vip_double} พอยต์)` : ''}</li>
                           ))}
                         </ul>
                       </div>
