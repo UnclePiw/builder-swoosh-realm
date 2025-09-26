@@ -300,7 +300,7 @@ export default function Index() {
       flash: 'โปรโมชัน FLASH SALE (ลดล้างสต��อก)',
       bundles: [
         { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
-        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอน��์', normal: 130, special: 115, save: 15 },
+        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
         { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
       ],
       time: [
@@ -517,7 +517,7 @@ export default function Index() {
                   <TableHead className="text-right">GP Margin</TableHead>
                   <TableHead className="text-right">การใช้</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
-                  <TableHead className="text-right">คำแนะน���โปรโมชัน</TableHead>
+                  <TableHead className="text-right">คำแนะนำโปรโมชัน</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
