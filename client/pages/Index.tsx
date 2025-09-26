@@ -66,9 +66,12 @@ export default function Index() {
     sugar: 40000,
     capacity: 2000,
     profitTarget: "",
+    weather: 'แดด',
+    special_day: false,
   });
 
   const [manual, setManual] = useState(false);
+  const [lastPlanId, setLastPlanId] = useState<string | null>(null);
 
   const productDerived = useMemo(() => {
     return PRODUCTS.map((p) => {
