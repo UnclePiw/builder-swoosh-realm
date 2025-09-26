@@ -17,7 +17,7 @@ const TH = {
   flour: "แป้ง (g)",
   eggs: "ไข่ (ฟอง)",
   butter: "เนย (g)",
-  sugar: "น้ำ���าล (g)",
+  sugar: "น้ำตาล (g)",
   capacity: "กำลังการผลิตต่อวัน (ชิ้น)",
   profitTarget: "เป้าหมายกำไร (ไม่บังคับ)",
   calculate: "คำนวณแผนการผลิต",
@@ -412,7 +412,7 @@ export default function Index() {
                 <Calculator className="mr-2 size-4" /> {TH.calculate}
               </Button>
               <Button variant="outline" onClick={() => loadColabMock()}>
-                โหลดตัวอย่��งจาก Colab
+                โหลดตัวอย่างจาก Colab
               </Button>
             </div>
           </CardContent>
@@ -495,7 +495,7 @@ export default function Index() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">ตารางแนะนำการผลิต</CardTitle>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>��รับเอง</span>
+                <span>{TH.manual}</span>
                 <Switch checked={manual} onCheckedChange={setManual} />
               </div>
             </div>
@@ -642,8 +642,16 @@ export default function Index() {
             <CardContent className="h-[260px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
-                  <Tooltip />
-                  <Pie data={plan.map(p=>({ name: p.name, value: p.qty * (p.profitPerUnit||0) }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                  <Tooltip formatter={(value:any) => (typeof value === 'number' ? Number(value).toFixed(2) : value)} />
+                  <Pie
+                    data={plan.map(p=>({ name: p.name, value: p.qty * (p.profitPerUnit||0) }))}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    label={(entry:any) => `${entry.name}: ${Number(entry.value).toFixed(2)}`}
+                  >
                     {plan.map((_, idx) => (
                       <Cell key={`cell-${idx}`} fill={["#059669","#F97316","#10B981","#6B21A8","#7C3AED","#F59E0B","#06B6D4"][idx%7]} />
                     ))}
