@@ -300,7 +300,7 @@ export default function Index() {
       ],
       time: [
         { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น แถม 1 ชิ้น' },
-        { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดราคา 15%' },
+        { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดรา��า 15%' },
         { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
       ],
       vip: [
@@ -439,7 +439,7 @@ export default function Index() {
                 </ul>
               </div>
               <div>
-                <div className="font-medium mb-2">วัต���ุดิบที่เหลือ</div>
+                <div className="font-medium mb-2">วัตถุดิบที่เหลือ</div>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>• {TH.flour}: {remaining.flour.toLocaleString()}</li>
                   <li>• {TH.eggs}: {remaining.eggs.toLocaleString()}</li>
