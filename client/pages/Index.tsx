@@ -186,7 +186,7 @@ export default function Index() {
         sonner.success("คำนวณแผนการผลิตเสร็จแล้ว");
       } else {
         console.warn("/api/plan returned unexpected payload", data);
-        sonner.error("ไม่สามารถคำนวณแผนจากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
+        sonner.error("ไม่สามารถคำนวณแผ��จากเซิร์ฟเวอร์ได้ — ใช้โลคัลแทน");
         recalcLocal();
       }
     } catch (err: any) {
@@ -385,7 +385,7 @@ export default function Index() {
 
             <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
               <div>
-                <div className="font-medium mb-2">วัตถุดิบที่จะใช้</div>
+                <div className="font-medium mb-2">ว��ตถุดิบที่จะใช้</div>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>• {TH.flour}: {usage.flour.toLocaleString()}</li>
                   <li>• {TH.eggs}: {usage.eggs.toLocaleString()}</li>
@@ -416,7 +416,7 @@ export default function Index() {
               </Button>
 
               <Button className="w-full md:w-auto" onClick={() => {
-                if (!lastPlanId) return sonner.error('ยัง��ม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน');
+                if (!lastPlanId) return sonner.error('ยังไม่มีแผนบันทึก กรุณากด ���ำนวณ ก่อน');
                 const url = `${window.location.origin}${window.location.pathname}?planId=${lastPlanId}`;
                 navigator.clipboard?.writeText(url);
                 sonner.success('คัดลอกลิงก์แผนไปยัง Clipboard');
@@ -434,7 +434,7 @@ export default function Index() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">ตารางแนะนำการผลิต</CardTitle>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>ปรับเอง</span>
+                <span>��รับเอง</span>
                 <Switch checked={manual} onCheckedChange={setManual} />
               </div>
             </div>
@@ -444,7 +444,7 @@ export default function Index() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[30%]">เมนู</TableHead>
-                  <TableHead className="text-right">จำนว��แนะนำ</TableHead>
+                  <TableHead className="text-right">จำนวนแนะนำ</TableHead>
                   <TableHead className="text-right">กำไร/หน่วย</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
                   <TableHead className="text-right">คำแนะนำโปรโมชัน</TableHead>
@@ -476,36 +476,107 @@ export default function Index() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Row 1 */}
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl">ปริมาณที่ควรผลิตต่อเมนู</CardTitle>
+            <CardHeader>
+              <CardTitle className="text-lg">Production vs Demand Comparison</CardTitle>
             </CardHeader>
-            <CardContent className="h-[320px]">
+            <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barData}>
+                <BarChart data={plan.map(p=>({ name: p.name, production: p.qty, demand: (p as any).forecast || 0 }))}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} interval={0} angle={-15} textAnchor="end" height={60} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="quantity" name="จำนวน (ชิ้น)" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="production" name="Production Plan" fill="#059669" />
+                  <Bar dataKey="demand" name="Forecasted Demand" fill="#7C3AED" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl">สัดส่วนการใช้วัตถุดิบ (%)</CardTitle>
+            <CardHeader>
+              <CardTitle className="text-lg">Profit per Unit Analysis</CardTitle>
             </CardHeader>
-            <CardContent className="h-[320px]">
+            <CardContent className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={plan.map(p=>({ name: p.name, profit: +(p.profitPerUnit||0) }))}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="profit" fill="#10B981" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Expected Total Profit by Product</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[260px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={plan.map(p=>({ name: p.name, total: +(p.qty * (p.profitPerUnit||0)) }))}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="total" fill="#6B21A8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Row 2 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Production Utilization Rate</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[260px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={plan.map(p=>({ name: p.name, util: ((p as any).utilization_rate||0) }))}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <YAxis domain={[0,100]} />
+                  <Tooltip />
+                  <Bar dataKey="util" fill="#F59E0B" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Expected Leftover Inventory</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[260px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={plan.map(p=>({ name: p.name, leftover: (p.expected_leftover||0) }))}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="leftover" fill="#059669" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Profit Distribution</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[260px] flex items-center justify-center">
+              <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Tooltip />
-                  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-                    {pieData.map((_, idx) => (
-                      <Cell key={`cell-${idx}`} fill={pieColors[idx % pieColors.length]} />
+                  <Pie data={plan.map(p=>({ name: p.name, value: p.qty * (p.profitPerUnit||0) }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                    {plan.map((_, idx) => (
+                      <Cell key={`cell-${idx}`} fill={["#059669","#F97316","#10B981","#6B21A8","#7C3AED","#F59E0B","#06B6D4"][idx%7]} />
                     ))}
                   </Pie>
                 </PieChart>
