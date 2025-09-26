@@ -33,7 +33,7 @@ def main():
         date = datetime.now()
 
     PRODUCTS = [
-        {'key': 'croissant', 'name': 'ครัว��องต์', 'price': 50, 'recipe': {'flour':50,'butter':30,'sugar':10,'eggs':1}, 'base':120},
+        {'key': 'croissant', 'name': 'ครัวซองต์', 'price': 50, 'recipe': {'flour':50,'butter':30,'sugar':10,'eggs':1}, 'base':120},
         {'key': 'butter_cookie', 'name': 'คุกกี้เนย', 'price': 15, 'recipe': {'flour':20,'butter':15,'sugar':10,'eggs':0}, 'base':300},
         {'key': 'taiwan_cake', 'name': 'เค้กไข่ไต้หวัน', 'price': 40, 'recipe': {'flour':30,'butter':5,'sugar':25,'eggs':2}, 'base':80},
         {'key': 'brownie', 'name': 'บราวนี่', 'price': 55, 'recipe': {'flour':25,'butter':20,'sugar':30,'eggs':1}, 'base':90},
@@ -93,7 +93,28 @@ def main():
         stock['sugar'] -= allocate * p['recipe']['sugar']
         stock['eggs'] -= allocate * p['recipe']['eggs']
         capacity -= allocate
-        plan.append({'product':p['name'],'key':p['key'],'quantity':allocate,'profitPerUnit': entry['profit']})
+        expected_leftover = max(0, allocate - forecast.get(p['name'], 0))
+        gp_margin = round((p['price'] - cost) / p['price'] if p['price']>0 else 0, 2)
+        promo = None
+        # Promotion rules
+        if forecast.get(p['name'],0) > 0 and expected_leftover / max(1, forecast.get(p['name'],0)) > 0.3:
+            promo = f"โปรโมชั่นแนะนำ: ��ดราคา 20%"
+        elif special:
+            promo = f"โปรดจัดชุดขายคู่กับกาแฟ"
+        elif expected_leftover>0 and expected_leftover > 10:
+            promo = f"เร่งขาย เพราะวัตถุดิบอาจใกล้หมด"
+
+        plan.append({
+            'product':p['name'],
+            'key':p['key'],
+            'quantity':allocate,
+            'profitPerUnit': entry['profit'],
+            'expected_leftover': expected_leftover,
+            'selling_price': p['price'],
+            'product_cost': round(cost,2),
+            'gp_margin': gp_margin,
+            'promotion_suggestion': promo
+        })
 
     output = {'forecast':forecast,'plan':plan,'remainingStock':stock}
     print(json.dumps(output))
