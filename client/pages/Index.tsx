@@ -42,7 +42,7 @@ const PRODUCTS: {
   recipe: { flour: number; butter: number; sugar: number; eggs: number };
 }[] = [
   { key: "croissant", name: "ครัวซองต์", price: 50, recipe: { flour: 50, butter: 30, sugar: 10, eggs: 1 } },
-  { key: "butter_cookie", name: "คุกกี���เนย", price: 15, recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 } },
+  { key: "butter_cookie", name: "คุกกี้เนย", price: 15, recipe: { flour: 20, butter: 15, sugar: 10, eggs: 0 } },
   { key: "taiwan_cake", name: "เค้กไข่ไต้หวัน", price: 40, recipe: { flour: 30, butter: 5, sugar: 25, eggs: 2 } },
   { key: "brownie", name: "บราวนี่", price: 55, recipe: { flour: 25, butter: 20, sugar: 30, eggs: 1 } },
   { key: "pound_cake", name: "ขนมปังปอนด์", price: 80, recipe: { flour: 100, butter: 10, sugar: 15, eggs: 1 } },
@@ -517,7 +517,7 @@ export default function Index() {
                   <TableHead className="text-right">GP Margin</TableHead>
                   <TableHead className="text-right">การใช้</TableHead>
                   <TableHead className="text-right">กำไรรวม</TableHead>
-                  <TableHead className="text-right">คำแนะนำโปรโมชัน</TableHead>
+                  <TableHead className="text-right">คำแนะน���โปรโมชัน</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
