@@ -105,7 +105,9 @@ export default function Index() {
   );
 
   useEffect(() => {
+    // Load baseline calculation and then populate Colab mock so promotions appear by default in the prototype
     recalcPlan();
+    loadColabMock();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -290,10 +292,10 @@ export default function Index() {
 
     // set up higher-level promotions and KPIs
     setPromotions({
-      flash: 'FLASH SALE: สินค้าบางรายการลดล้างสต็อกสูงสุด 30%',
+      flash: 'FLASH SALE: สินค้าบางรายการลด��้างสต็อกสูงสุด 30%',
       bundles: [
         { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
-        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
+        { title: 'Bundle 2: ครัวซอ��ต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
         { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
       ],
       time: [
