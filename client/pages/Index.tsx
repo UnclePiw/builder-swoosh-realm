@@ -292,15 +292,15 @@ export default function Index() {
 
     // set up higher-level promotions and KPIs
     setPromotions({
-      flash: 'โปรโมชัน FLASH SALE (ลดล้างสต็อก)',
+      flash: 'โปรโมชัน FLASH SALE (ลดล้างสต��อก)',
       bundles: [
         { title: 'Bundle 1: ครัวซองต์ + บราวนี่', normal: 105, special: 93, save: 12 },
-        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอนด์', normal: 130, special: 115, save: 15 },
+        { title: 'Bundle 2: ครัวซองต์ + ขนมปังปอน��์', normal: 130, special: 115, save: 15 },
         { title: 'Bundle 3: บราวนี่ + ขนมปังปอนด์', normal: 135, special: 119, save: 16 },
       ],
       time: [
         { title: 'Morning Rush (7-9 น.)', desc: 'ซื้อ ครัวซองต์ 3 ชิ้น แถม 1 ชิ้น' },
-        { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดรา��า 15%' },
+        { title: 'Afternoon Delight (14-16 น.)', desc: 'ครัวซองต์ ลดราคา 15%' },
         { title: 'Evening Clear-out (18-20 น.)', desc: 'คุกกี้เนย ลดราคา 20-25%' },
       ],
       vip: [
@@ -669,7 +669,7 @@ export default function Index() {
           <CardContent>
             <div className="space-y-3">
               {plan.filter(p=>p.promotion).length === 0 ? (
-                <div className="text-sm text-muted-foreground">ไม่พบคำแนะนำโปรโมชันสำหรับแผนนี้</div>
+                <div className="text-sm text-muted-foreground">ไ���่พบคำแนะนำโปรโมชันสำหรับแผนนี้</div>
               ) : (
                 plan.filter(p=>p.promotion).map(p=> (
                   <div key={p.key} className="flex items-start gap-3 rounded-md border p-3 bg-gradient-to-r from-orange-50 to-white">
