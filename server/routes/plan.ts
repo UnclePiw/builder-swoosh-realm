@@ -29,19 +29,22 @@ export const handlePlan: RequestHandler = async (req, res) => {
       });
 
       py.on("close", (code) => {
-        if (code === 0 && stdout) {
+        const outTrim = stdout ? stdout.toString().trim() : "";
+        if (code === 0 && outTrim) {
           try {
-            const result = JSON.parse(stdout);
+            const result = JSON.parse(outTrim);
             // Save a copy locally
             const id = uuidv4();
             const record = { id, createdAt: new Date().toISOString(), input: payload, result };
             fs.writeFileSync(path.join(DATA_DIR, `${id}.json`), JSON.stringify(record, null, 2));
             res.json({ ok: true, source: "python", id, result });
           } catch (err) {
-            res.status(500).json({ ok: false, error: "Invalid JSON from Python model", details: stderr });
+            console.error("JSON parse error from python stdout:", outTrim, stderr, err);
+            res.status(500).json({ ok: false, error: "Invalid JSON from Python model", stdout: outTrim, stderr });
           }
         } else {
           // Fallback: run JS heuristic
+          console.warn("Python script failed or produced no output", { code, stderr, stdout });
           const result = runJsFallback(payload);
           const id = uuidv4();
           const record = { id, createdAt: new Date().toISOString(), input: payload, result };
